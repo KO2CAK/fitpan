@@ -278,7 +278,7 @@ const SalesLandingPage = () => {
           {/* Brand Logo */}
           <div className="flex items-center gap-2">
             <img
-              src="/src/img/logo-fitpan.jpeg"
+              src="/img/logo-fitpan.jpeg"
               alt="FitPan Logo"
               className="h-8 w-auto object-contain"
             />
@@ -316,17 +316,13 @@ const SalesLandingPage = () => {
             ngemil harianmu yang praktis, sehat, dan tanpa pengawet.
           </p>
 
-          {/* Product Video */}
+          {/* Product Image */}
           <div className="relative mb-6">
             <div className="bg-gradient-to-br from-emerald-100 to-sky-100 rounded-2xl p-4 shadow-xl shadow-emerald-600/10 overflow-hidden">
-              <video
-                src="/src/img/fitpan-video.mp4"
+              <img
+                src="/img/fitpan1.jpeg"
                 alt="FitPan - Produk Premium"
                 className="w-full h-auto rounded-xl object-cover"
-                autoPlay
-                loop
-                muted
-                playsInline
               />
             </div>
 
