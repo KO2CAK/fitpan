@@ -15,7 +15,7 @@ export const productCategories = [
     badgeBg: 'bg-orange-100',
     variants: [
       { id: 'apel',               name: 'Apel',               emoji: '🍎', price: 30000 },
-      { id: 'buah-naga',          name: 'Buah Naga',          emoji: '🩷', price: 25000 },
+      { id: 'buah-naga',          name: 'Buah Naga',          emoji: '🐉', price: 25000 },
       { id: 'durian-montong',     name: 'Durian Montong',     emoji: '🌟', price: 100000 },
       { id: 'kelapa',             name: 'Buah Kelapa',        emoji: '🥥', price: 25000 },
       { id: 'nanas',              name: 'Nanas',              emoji: '🍍', price: 30000 },
