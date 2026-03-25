@@ -1,0 +1,188 @@
+@import url("https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap");
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* ========================================
+   BASE STYLES - Typography & Colors
+======================================== */
+
+@layer base {
+  /* HTML & Body */
+  html {
+    scroll-behavior: smooth;
+  }
+
+  body {
+    @apply bg-background-light text-gray-800 font-body;
+  }
+
+  /* Heading Hierarchy */
+  h1 {
+    @apply font-heading text-h1 text-primary-500;
+  }
+
+  h2 {
+    @apply font-heading text-h2 text-primary-600;
+  }
+
+  h3 {
+    @apply font-heading text-h3 text-primary-600;
+  }
+
+  h4 {
+    @apply font-heading text-h4 text-primary-700;
+  }
+
+  h5 {
+    @apply font-heading text-h5 text-primary-800;
+  }
+
+  h6 {
+    @apply font-heading text-h6 text-primary-800;
+  }
+
+  /* Paragraph */
+  p {
+    @apply font-body text-body-md text-gray-700 leading-relaxed;
+  }
+
+  /* Links */
+  a {
+    @apply text-accent-500 hover:text-accent-600 transition-colors duration-200;
+  }
+
+  /* Strong & Emphasis */
+  strong {
+    @apply font-semibold text-primary-700;
+  }
+
+  em {
+    @apply italic text-primary-600;
+  }
+}
+
+/* ========================================
+   COMPONENT UTILITIES
+======================================== */
+
+@layer components {
+  /* Premium Button Styles */
+  .btn-primary {
+    @apply px-6 py-3 rounded-lg font-heading font-semibold text-white bg-primary-500 hover:bg-primary-600 transition-colors duration-200 shadow-md hover:shadow-lg;
+  }
+
+  .btn-primary-outline {
+    @apply px-6 py-3 rounded-lg font-heading font-semibold text-primary-500 bg-transparent border-2 border-primary-500 hover:bg-primary-50 transition-colors duration-200;
+  }
+
+  .btn-accent {
+    @apply px-6 py-3 rounded-lg font-heading font-semibold text-white bg-accent-500 hover:bg-accent-600 transition-colors duration-200 shadow-md hover:shadow-lg;
+  }
+
+  .btn-secondary {
+    @apply px-6 py-3 rounded-lg font-heading font-semibold text-gray-700 bg-background-darker hover:bg-background-muted transition-colors duration-200;
+  }
+
+  /* Premium Card Styles */
+  .card {
+    @apply bg-white rounded-2xl shadow-card hover:shadow-card-hover transition-shadow duration-300 p-6;
+  }
+
+  .card-elevated {
+    @apply bg-white rounded-2xl shadow-lg hover:shadow-xl transition-shadow duration-300 p-8;
+  }
+
+  /* Premium Badges */
+  .badge {
+    @apply inline-flex items-center px-3 py-1 rounded-full text-body-sm font-semibold bg-primary-100 text-primary-700;
+  }
+
+  .badge-accent {
+    @apply inline-flex items-center px-3 py-1 rounded-full text-body-sm font-semibold bg-accent-100 text-accent-700;
+  }
+
+  /* Section Container */
+  .section-container {
+    @apply max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-12 sm:py-16 lg:py-20;
+  }
+
+  /* Typography Utility Classes */
+  .text-gradient {
+    @apply bg-gradient-to-r from-primary-600 to-accent-500 bg-clip-text text-transparent;
+  }
+
+  /* Premium Divider */
+  .divider {
+    @apply h-1 w-12 bg-gradient-to-r from-primary-500 to-accent-500 rounded-full;
+  }
+
+  /* Floating Action Button */
+  .fab {
+    @apply fixed bottom-6 right-6 w-14 h-14 rounded-full bg-accent-500 text-white flex items-center justify-center shadow-lg hover:shadow-xl hover:scale-110 transition-all duration-300;
+  }
+
+  /* Premium Input/Form Styles */
+  .input-premium {
+    @apply w-full px-4 py-3 rounded-lg border-2 border-background-muted focus:border-primary-500 focus:outline-none transition-colors duration-200 font-body text-body-md;
+  }
+
+  .input-premium:hover {
+    @apply border-background-darker;
+  }
+
+  /* Scroll Smooth Anchor Links */
+  .anchor-smooth {
+    @apply scroll-smooth;
+  }
+}
+
+/* ========================================
+   ANIMATION & EFFECTS
+======================================== */
+
+@layer utilities {
+  /* Smooth fade in for images */
+  .fade-in-image {
+    animation: fadeInImage 0.8s ease-in-out;
+  }
+
+  @keyframes fadeInImage {
+    from {
+      opacity: 0;
+      filter: blur(4px);
+    }
+    to {
+      opacity: 1;
+      filter: blur(0);
+    }
+  }
+
+  /* Premium hover effect for cards */
+  .card-hover-lift {
+    @apply transition-all duration-300;
+  }
+
+  .card-hover-lift:hover {
+    @apply -translate-y-2 shadow-xl;
+  }
+}
+
+/* ========================================
+   RESPONSIVE TYPOGRAPHY
+======================================== */
+
+@media (max-width: 640px) {
+  h1 {
+    @apply text-4xl;
+  }
+
+  h2 {
+    @apply text-3xl;
+  }
+
+  h3 {
+    @apply text-2xl;
+  }
+}
