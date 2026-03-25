@@ -5,6 +5,7 @@ import BenefitBar from '../components/organisms/BenefitBar'
 import Button from '../components/atoms/Button'
 import { productCategories } from '../data/products'
 import { inspirationPosts } from '../data/inspiration'
+import photoOfProduct from '../assets/PhotoOfProduct-2.jpeg'
 
 // ─── Gut Health Section ────────────────────────────────────────────────────
 function GutHealthSection() {
@@ -34,18 +35,10 @@ function GutHealthSection() {
               <Button variant="accent" size="lg">Lihat Semua Produk</Button>
             </Link>
           </div>
-          <div className="grid grid-cols-2 gap-4">
-            {[
-              { icon: '🌾', label: 'Serat Tinggi' },
-              { icon: '💊', label: '11 Vitamin' },
-              { icon: '⚡', label: 'Prebiotik' },
-              { icon: '🛡️', label: '8 Mineral' },
-            ].map((item) => (
-              <div key={item.label} className="bg-primary-700/50 backdrop-blur rounded-2xl p-5 flex flex-col items-center text-center gap-3 border border-primary-600">
-                <span className="text-3xl">{item.icon}</span>
-                <p className="font-heading font-semibold text-sm">{item.label}</p>
-              </div>
-            ))}
+          <div className="flex items-center justify-center">
+            <div className="rounded-3xl overflow-hidden shadow-2xl border-4 border-primary-700 max-w-sm w-full">
+              <img src={photoOfProduct} alt="Produk Fitpan" className="w-full object-cover" />
+            </div>
           </div>
         </motion.div>
       </div>

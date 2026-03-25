@@ -1,6 +1,7 @@
 import { motion } from 'framer-motion'
 import { Link } from 'react-router-dom'
 import Button from '../atoms/Button'
+import photoOfProduct from '../../assets/PhotoOfProduct.jpeg'
 
 export default function HeroSection() {
   const containerVariants = {
@@ -76,12 +77,12 @@ export default function HeroSection() {
         {/* Right – product visual */}
         <motion.div variants={itemVariants} className="flex justify-center">
           <div className="relative">
-            <div className="w-72 h-72 md:w-96 md:h-96 bg-gradient-to-br from-primary-100 via-background-muted to-accent-100 rounded-full flex items-center justify-center shadow-2xl">
-              <div className="text-center space-y-3">
-                <div className="text-8xl">🥙</div>
-                <p className="font-heading font-bold text-primary-700 text-lg">Fitpan</p>
-                <p className="text-body-sm text-gray-500">100% Natural Ingredients</p>
-              </div>
+            <div className="w-72 md:w-96 rounded-3xl overflow-hidden shadow-2xl border-4 border-white">
+              <img
+                src={photoOfProduct}
+                alt="Produk Fitpan"
+                className="w-full h-full object-cover"
+              />
             </div>
             {/* Floating badges */}
             <div className="absolute -top-4 -right-4 bg-white shadow-lg rounded-xl px-3 py-2 text-xs font-bold text-primary-600 border border-primary-100">
