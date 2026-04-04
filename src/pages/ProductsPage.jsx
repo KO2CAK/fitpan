@@ -1,8 +1,7 @@
 import { motion } from 'framer-motion'
 import { Link } from 'react-router-dom'
-import { productCategories } from '../data/products'
 import Button from '../components/atoms/Button'
-import { useBeliCounter } from '../hooks/useSupabase'
+import { useBeliCounter, useWebProductCategories } from '../hooks/useSupabase'
 
 // ─── Category Card ─────────────────────────────────────────────────────────
 
@@ -72,6 +71,7 @@ function CategoryCard({ cat, index }) {
 // ─── ProductsPage ──────────────────────────────────────────────────────────
 export default function ProductsPage() {
   const { count } = useBeliCounter()
+  const { categories: productCategories } = useWebProductCategories()
   return (
     <div className="min-h-screen bg-background-light">
       {/* Page Header */}

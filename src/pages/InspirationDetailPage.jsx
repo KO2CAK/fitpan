@@ -1,17 +1,26 @@
 import { motion } from 'framer-motion'
 import { useParams, Link, Navigate } from 'react-router-dom'
-import { inspirationPosts } from '../data/inspiration'
 import { products } from '../data/products'
+import { inspirationPosts as staticPosts } from '../data/inspiration'
 import Button from '../components/atoms/Button'
+import { useBlogPost } from '../hooks/useSupabase'
 
 export default function InspirationDetailPage() {
   const { id } = useParams()
-  const post = inspirationPosts.find((p) => p.id === id)
+  const { post, loading } = useBlogPost(id)
+
+  if (loading) {
+    return (
+      <div className="flex items-center justify-center min-h-screen bg-background-light">
+        <div className="w-10 h-10 border-2 border-primary-500 border-t-transparent rounded-full animate-spin" />
+      </div>
+    )
+  }
 
   if (!post) return <Navigate to="/inspiration" replace />
 
-  const relatedProduct = products.find((p) => p.id === post.relatedProduct)
-  const otherPosts = inspirationPosts.filter((p) => p.id !== id).slice(0, 3)
+  const relatedProduct = post.relatedProduct ? products.find((p) => p.id === post.relatedProduct) : null
+  const otherPosts = staticPosts.filter((p) => p.id !== id).slice(0, 3)
 
   // Split content into paragraphs
   const paragraphs = post.content.trim().split('\n\n').filter(Boolean)
@@ -19,7 +28,7 @@ export default function InspirationDetailPage() {
   return (
     <div className="min-h-screen bg-background-light">
       {/* Header */}
-      <div className={`${post.avatarBg} py-20`}>
+      <div className={`${post.avatarBg || 'bg-primary-50'} py-20`}>
         <div className="max-w-3xl mx-auto px-4 sm:px-6">
           <Link
             to="/inspiration"
@@ -52,8 +61,11 @@ export default function InspirationDetailPage() {
       <div className="max-w-3xl mx-auto px-4 sm:px-6 py-14">
         {/* Author avatar */}
         <div className="flex items-center gap-4 mb-10 pb-8 border-b border-gray-200">
-          <div className={`w-16 h-16 rounded-full ${post.avatarBg} flex items-center justify-center text-3xl shadow-sm`}>
-            {post.avatar}
+          <div className={`w-16 h-16 rounded-full ${post.avatarBg || 'bg-primary-50'} flex items-center justify-center text-3xl shadow-sm overflow-hidden`}>
+            {post.avatarImg
+              ? <img src={post.avatarImg} alt={post.category} className="w-full h-full object-cover" />
+              : post.avatar
+            }
           </div>
           <div>
             <p className="font-heading font-bold text-primary-800">{post.category}</p>

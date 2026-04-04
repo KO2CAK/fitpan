@@ -1,16 +1,17 @@
 import { useState } from 'react'
 import { motion } from 'framer-motion'
 import { Link } from 'react-router-dom'
-import { inspirationPosts } from '../data/inspiration'
-
-const allTags = ['Semua', ...new Set(inspirationPosts.flatMap((p) => p.tags))]
+import { useBlogs } from '../hooks/useSupabase'
 
 export default function InspirationPage() {
+  const { posts, loading } = useBlogs()
   const [activeTag, setActiveTag] = useState('Semua')
 
+  const allTags = ['Semua', ...new Set(posts.flatMap((p) => p.tags || []))]
+
   const filtered = activeTag === 'Semua'
-    ? inspirationPosts
-    : inspirationPosts.filter((p) => p.tags.includes(activeTag))
+    ? posts
+    : posts.filter((p) => (p.tags || []).includes(activeTag))
 
   return (
     <div className="min-h-screen bg-background-light">
@@ -67,6 +68,11 @@ export default function InspirationPage() {
 
       {/* Posts Grid */}
       <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-14">
+        {loading ? (
+          <div className="flex justify-center py-20">
+            <div className="w-10 h-10 border-2 border-primary-500 border-t-transparent rounded-full animate-spin" />
+          </div>
+        ) : (
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
           {filtered.map((post, i) => (
             <motion.div
@@ -78,8 +84,11 @@ export default function InspirationPage() {
               className="bg-white rounded-3xl overflow-hidden shadow-sm hover:shadow-lg transition-shadow duration-300 group flex flex-col"
             >
               {/* Thumbnail */}
-              <div className={`h-48 ${post.avatarBg} flex items-center justify-center flex-shrink-0`}>
-                <span className="text-7xl">{post.avatar}</span>
+              <div className={`h-48 ${post.avatarBg || 'bg-primary-50'} flex items-center justify-center flex-shrink-0 overflow-hidden`}>
+                {post.avatarImg
+                  ? <img src={post.avatarImg} alt={post.title} className="w-full h-full object-cover" />
+                  : <span className="text-7xl">{post.avatar}</span>
+                }
               </div>
 
               {/* Content */}
@@ -110,8 +119,9 @@ export default function InspirationPage() {
             </motion.div>
           ))}
         </div>
+        )}
 
-        {filtered.length === 0 && (
+        {filtered.length === 0 && !loading && (
           <div className="text-center py-20 text-gray-400">
             <p className="text-4xl mb-4">🔍</p>
             <p className="text-body-lg">Tidak ada cerita dengan tag ini.</p>

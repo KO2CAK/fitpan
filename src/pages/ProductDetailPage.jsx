@@ -1,17 +1,23 @@
 import { useState } from 'react'
 import { motion } from 'framer-motion'
 import { useParams, Link, Navigate } from 'react-router-dom'
-import { productCategories } from '../data/products'
 import Button from '../components/atoms/Button'
 import { useCart } from '../context/CartContext'
+import { useWebProductCategories } from '../hooks/useSupabase'
 
 export default function ProductDetailPage() {
   const { id } = useParams()
   const [search, setSearch] = useState('')
   const { addToCart, setIsCartOpen } = useCart()
+  const { categories: productCategories, loading } = useWebProductCategories()
 
   const cat = productCategories.find((c) => c.id === id)
-  if (!cat) return <Navigate to="/products" replace />
+  if (!loading && !cat) return <Navigate to="/products" replace />
+  if (!cat) return (
+    <div className="flex items-center justify-center min-h-screen">
+      <div className="w-8 h-8 border-2 border-primary-500 border-t-transparent rounded-full animate-spin" />
+    </div>
+  )
 
   const filtered = search
     ? cat.variants.filter((v) => v.name.toLowerCase().includes(search.toLowerCase()))

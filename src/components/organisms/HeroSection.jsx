@@ -59,9 +59,7 @@ export default function HeroSection() {
 
           <motion.div variants={itemVariants} className="flex flex-wrap gap-4">
             <Button variant="primary" size="lg" onClick={handleBeliSekarang}>Beli Sekarang</Button>
-            <a href="/products">
-              <Button variant="outline" size="lg">Lihat Semua Produk</Button>
-            </a>
+            <Button variant="outline" size="lg" onClick={() => { increment(); navigate('/products') }}>Lihat Semua Produk</Button>
           </motion.div>
 
           <motion.div variants={itemVariants} className="flex items-center gap-4 pt-2">

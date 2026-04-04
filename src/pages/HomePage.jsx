@@ -4,12 +4,13 @@ import HeroSection from '../components/organisms/HeroSection'
 import BenefitBar from '../components/organisms/BenefitBar'
 import Button from '../components/atoms/Button'
 import { productCategories } from '../data/products'
-import { inspirationPosts } from '../data/inspiration'
+import { inspirationPosts as staticInspiration } from '../data/inspiration'
 import photoOfProduct from '../assets/PhotoOfProduct-2.jpeg'
-import { useBeliCounter } from '../hooks/useSupabase'
+import { useBeliCounter, useFetchTestimonials, useBlogs } from '../hooks/useSupabase'
 
 // ─── Gut Health Section ────────────────────────────────────────────────────
 function GutHealthSection() {
+  const { increment } = useBeliCounter()
   return (
     <section className="py-20 bg-primary-800 text-white overflow-hidden">
       <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -33,7 +34,7 @@ function GutHealthSection() {
               Fitpan diolah dengan teknologi khusus yang menjaga kandungan serat dan nutrisi alami dari buah dan sayur.
               Namun nutrisi dari fitpan tidak sebesar buah dan sayur alami.
             </p>
-            <Link to="/products">
+            <Link to="/products" onClick={increment}>
               <Button variant="accent" size="lg">Lihat Semua Produk</Button>
             </Link>
           </div>
@@ -50,6 +51,7 @@ function GutHealthSection() {
 
 // ─── Products Showcase Section ─────────────────────────────────────────────
 function ProductsShowcase() {
+  const { increment } = useBeliCounter()
   return (
     <section className="py-20 bg-background-light">
       <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -123,7 +125,7 @@ function ProductsShowcase() {
         </div>
 
         <div className="text-center mt-10">
-          <Link to="/products">
+          <Link to="/products" onClick={increment}>
             <Button variant="outline" size="lg">Lihat Semua Produk</Button>
           </Link>
         </div>
@@ -223,7 +225,8 @@ function TestimonialsStrip() {
 
 // ─── Inspiration Preview ───────────────────────────────────────────────────
 function InspirationPreview() {
-  const preview = inspirationPosts.slice(0, 3)
+  const { posts } = useBlogs()
+  const preview = posts.slice(0, 3)
 
   return (
     <section className="py-20 bg-background-darker">
@@ -248,8 +251,11 @@ function InspirationPreview() {
               transition={{ delay: i * 0.12 }}
               className="bg-white rounded-3xl overflow-hidden shadow-sm hover:shadow-md transition-shadow group"
             >
-              <div className={`h-44 ${post.avatarBg} flex items-center justify-center`}>
-                <span className="text-6xl">{post.avatar}</span>
+              <div className={`h-44 ${post.avatarBg || 'bg-primary-50'} flex items-center justify-center overflow-hidden`}>
+                {post.avatarImg
+                  ? <img src={post.avatarImg} alt={post.title} className="w-full h-full object-cover" />
+                  : <span className="text-6xl">{post.avatar}</span>
+                }
               </div>
               <div className="p-6">
                 <p className="text-xs text-accent-600 font-bold uppercase tracking-wide mb-2">{post.category}</p>

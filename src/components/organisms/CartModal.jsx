@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { X, Minus, Plus, ShoppingCart } from 'lucide-react'
 import { useCart } from '../../context/CartContext'
+import { tryCreateWebOrder } from '../../hooks/useSupabase'
 
 export default function CartModal() {
   const { cartItems, updateQty, clearCart, isCartOpen, setIsCartOpen } = useCart()
@@ -11,21 +12,29 @@ export default function CartModal() {
 
   const total = cartItems.reduce((sum, item) => sum + (item.price || 0) * item.qty, 0)
 
-  const handleCheckout = () => {
+  const handleCheckout = async () => {
     if (!name.trim()) {
       setNameError(true)
       return
     }
     setNameError(false)
 
+    // Record order in Supabase (gracefully — WhatsApp flow still works if this fails)
+    const txNumber = await tryCreateWebOrder({
+      customerName: name.trim(),
+      cartItems,
+      total,
+    })
+
     const itemLines = cartItems
       .map((i) => `- ${i.name} x${i.qty} - Rp ${(i.price * i.qty).toLocaleString('id-ID')}`)
       .join('\n')
 
+    const orderRef = txNumber ? `\n\n*Order Ref: ${txNumber}*` : ''
     const message =
       `Halo Fitpan! Saya *${name.trim()}* ingin memesan:\n\n` +
       `*Pesanan:*\n${itemLines}\n\n` +
-      `*Total: Rp ${total.toLocaleString('id-ID')}*\n\n` +
+      `*Total: Rp ${total.toLocaleString('id-ID')}*${orderRef}\n\n` +
       `Mohon bantu proses pesanan saya. Terima kasih!`
 
     const phone = whatsappPhone.replace(/\D/g, '')

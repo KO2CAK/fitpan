@@ -10,14 +10,5 @@ todo :
 9. chnge the lnk of the tiktok : tiktok.com/@fitpan_balikpapan (done)
 10. change the number of whatsapp : 08983487706 (done)
 11. delete the lazada 
-12. delete the brokoli, bombai, cabai, jamur kuping, jamur tiram, paprika, rawit product
-13. from the task number 4, i want all the button of "beli sekarang" "lihat semua produk" will increase the number of count in table web_counters.
-14. 
+13. from the task number 4, i want all the button of "beli sekarang" and "lihat semua produk" will increase the number of count in table web_counters. and make the number in databse is increase too, so when the other use open this website it will update too. (done)
 
-<!-- ------- -->
-note : i want integrate the webPOS and the fitpan website to on database
-1. add the database of webPOS to this project (udpate the database with the kasir database schema)
-2. make the product of the cashier integrate to the list of product in fitpan website
-3. make the transaction that made from fitpan website integrate to the transaction history of webPOS 
-4. make the RSS page to webPOS to setting the webpage of fitpan
-5. 

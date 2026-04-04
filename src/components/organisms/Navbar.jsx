@@ -4,6 +4,7 @@ import { Menu, X, ChevronDown, ShoppingCart } from 'lucide-react'
 import Button from '../atoms/Button'
 import logo from '../../assets/logo.png'
 import { useCart } from '../../context/CartContext'
+import { useBeliCounter } from '../../hooks/useSupabase'
 
 const productSubLinks = [
   { to: '/products/buah',  label: 'Fitpan Buah',  emoji: '🍎' },
@@ -74,6 +75,7 @@ export default function Navbar() {
   const [mobileOpen, setMobileOpen] = useState(false)
   const [mobileProductsOpen, setMobileProductsOpen] = useState(false)
   const { totalItems, setIsCartOpen } = useCart()
+  const { increment } = useBeliCounter()
 
   const navLinks = [
     { to: '/', label: 'Home' },
@@ -135,7 +137,7 @@ export default function Navbar() {
               </span>
             )}
           </button>
-          <Link to="/distributor">
+          <Link to="/distributor" onClick={increment}>
             <Button variant="primary" size="sm">Beli Sekarang</Button>
           </Link>
           <button
@@ -220,7 +222,7 @@ export default function Navbar() {
             </NavLink>
           ))}
 
-          <Link to="/distributor" onClick={() => setMobileOpen(false)} className="block mt-2 pt-2">
+          <Link to="/distributor" onClick={() => { increment(); setMobileOpen(false) }} className="block mt-2 pt-2">
             <Button variant="primary" className="w-full">Beli Sekarang</Button>
           </Link>
         </div>
