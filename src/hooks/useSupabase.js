@@ -357,3 +357,32 @@ export async function tryCreateWebOrder({ customerName, cartItems, total }) {
     return null
   }
 }
+
+// ─── Distributors — read active rows for Fitpan-Web ──────────────────────────
+export function useFetchDistributors() {
+  const [distributors, setDistributors] = useState([])
+  const [loading, setLoading] = useState(true)
+  const [error, setError] = useState(null)
+
+  useEffect(() => {
+    if (!supabase) {
+      setLoading(false)
+      return
+    }
+
+    supabase
+      .from('distributors')
+      .select('id, name, category, city, province, contact, email, logo_url')
+      .eq('is_active', true)
+      .order('category')
+      .order('province')
+      .order('name')
+      .then(({ data, error: err }) => {
+        if (err) setError(err.message)
+        else setDistributors(data || [])
+        setLoading(false)
+      })
+  }, [])
+
+  return { distributors, loading, error }
+}
