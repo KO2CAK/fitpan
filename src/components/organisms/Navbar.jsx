@@ -2,7 +2,7 @@ import { useState, useRef, useEffect } from 'react'
 import { Link, NavLink } from 'react-router-dom'
 import { Menu, X, ChevronDown, ShoppingCart } from 'lucide-react'
 import Button from '../atoms/Button'
-import logo from '../../assets/logo.png'
+import logo from '../../assets/FitpanLogo.webp'
 import { useCart } from '../../context/CartContext'
 import { useBeliCounter } from '../../hooks/useSupabase'
 
