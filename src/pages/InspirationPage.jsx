@@ -1,9 +1,10 @@
 import { useState } from 'react'
 import { motion } from 'framer-motion'
 import { Link } from 'react-router-dom'
-import { useBlogs } from '../hooks/useSupabase'
+import { useBlogs, useTrackPageView } from '../hooks/useSupabase'
 
 export default function InspirationPage() {
+  useTrackPageView('page_inspiration')
   const { posts, loading } = useBlogs()
   const [activeTag, setActiveTag] = useState('Semua')
 

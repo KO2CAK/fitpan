@@ -1,7 +1,7 @@
 import { motion } from 'framer-motion'
 import { Link } from 'react-router-dom'
 import Button from '../components/atoms/Button'
-import { useBeliCounter, useWebProductCategories } from '../hooks/useSupabase'
+import { useBeliCounter, useWebProductCategories, useTrackPageView } from '../hooks/useSupabase'
 
 // ─── Category Card ─────────────────────────────────────────────────────────
 
@@ -71,6 +71,7 @@ function CategoryCard({ cat, index }) {
 
 // ─── ProductsPage ──────────────────────────────────────────────────────────
 export default function ProductsPage() {
+  useTrackPageView('page_products')
   const { count } = useBeliCounter()
   const { categories: productCategories } = useWebProductCategories()
   return (

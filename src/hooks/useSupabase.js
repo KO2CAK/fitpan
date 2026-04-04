@@ -300,6 +300,18 @@ export function useBlogPost(slug) {
   return { post, loading }
 }
 
+// ─── Web Analytics — page view tracking ──────────────────────────────────────
+/**
+ * Tracks a page view once per page mount by calling the increment_page_view RPC.
+ * @param {string} pageId - The page identifier key (e.g. 'page_products')
+ */
+export function useTrackPageView(pageId) {
+  useEffect(() => {
+    if (!supabase || !pageId) return
+    supabase.rpc('increment_page_view', { p_page_id: pageId }).then(() => {})
+  }, [pageId])
+}
+
 // ─── Web Checkout — create pending transaction (WEB-5) ────────────────────────
 export async function tryCreateWebOrder({ customerName, cartItems, total }) {
   const ownerId = import.meta.env.VITE_OWNER_ID

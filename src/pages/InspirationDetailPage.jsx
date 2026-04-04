@@ -1,5 +1,6 @@
 import { motion } from 'framer-motion'
 import { useParams, Link, Navigate } from 'react-router-dom'
+import ReactMarkdown from 'react-markdown'
 import Button from '../components/atoms/Button'
 import { useBlogPost, useBlogs } from '../hooks/useSupabase'
 
@@ -20,9 +21,6 @@ export default function InspirationDetailPage() {
 
   const relatedProduct = null
   const otherPosts = allPosts.filter((p) => p.id !== id).slice(0, 3)
-
-  // Split content into paragraphs
-  const paragraphs = post.content.trim().split('\n\n').filter(Boolean)
 
   return (
     <div className="min-h-screen bg-background-light">
@@ -77,13 +75,9 @@ export default function InspirationDetailPage() {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6, delay: 0.2 }}
-          className="prose prose-lg max-w-none space-y-5"
+          className="prose prose-lg max-w-none text-gray-700"
         >
-          {paragraphs.map((para, i) => (
-            <p key={i} className="text-body-md text-gray-700 leading-relaxed">
-              {para}
-            </p>
-          ))}
+          <ReactMarkdown>{post.content}</ReactMarkdown>
         </motion.article>
 
         {/* Related Product */}

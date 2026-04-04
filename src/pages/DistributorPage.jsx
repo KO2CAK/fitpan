@@ -1,8 +1,10 @@
 import { motion } from 'framer-motion'
 import { Link } from 'react-router-dom'
 import Button from '../components/atoms/Button'
+import { useTrackPageView } from '../hooks/useSupabase'
 
 export default function DistributorPage() {
+  useTrackPageView('page_distributor')
   return (
     <div className="min-h-screen bg-background-light flex flex-col">
       {/* Back link */}
