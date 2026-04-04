@@ -108,7 +108,7 @@ export function useWebProductCategories() {
         const [{ data: products, error: prodError }, { data: categoryRows }] = await Promise.all([
           supabase
             .from('products')
-            .select('id, name, price, slug, image_url, web_description, category_id')
+            .select('id, name, price, slug, image_url, web_description, category_id, stock')
             .eq('is_web_visible', true)
             .order('name'),
           supabase
@@ -150,11 +150,13 @@ export function useWebProductCategories() {
             )
             return {
               id: p.slug || p.name.toLowerCase().replace(/\s+/g, '-').replace(/[^a-z0-9-]/g, ''),
+              dbId: p.id,
               name: p.name,
               emoji: staticVariant?.emoji || staticCat?.emoji || '',
               price: p.price,
               desc: p.web_description || undefined,
               image_url: p.image_url || undefined,
+              stock: p.stock ?? 0,
             }
           })
 
@@ -328,6 +330,7 @@ export async function tryCreateWebOrder({ customerName, cartItems, total }) {
 
     const items = cartItems.map((item) => ({
       transaction_id: tx.id,
+      product_id: item.dbId || null,
       product_name: item.name,
       quantity: item.qty,
       unit_price: item.price || 0,

@@ -177,10 +177,17 @@ export default function ProductDetailPage() {
                     <p className={`text-sm font-bold ${cat.textColor} mt-auto`}>
                       Rp {v.price.toLocaleString('id-ID')}
                     </p>
+                    <p className={`text-xs font-semibold ${
+                      v.stock === 0 ? 'text-red-500' : v.stock <= 5 ? 'text-orange-500' : 'text-gray-400'
+                    }`}>
+                      {v.stock === 0 ? 'Stok Habis' : `Stok: ${v.stock}`}
+                    </p>
                     <button
+                      disabled={v.stock === 0}
                       onClick={() =>
-                        addToCart({
+                        v.stock > 0 && addToCart({
                           id: `${cat.id}-${v.id}`,
+                          dbId: v.dbId,
                           name: v.name,
                           emoji: v.emoji,
                           image_url: v.image_url || null,
@@ -188,10 +195,14 @@ export default function ProductDetailPage() {
                           categoryName: cat.name,
                         })
                       }
-                      className="w-full text-xs font-heading font-semibold py-2 px-3 rounded-xl text-white transition-all hover:opacity-90 active:scale-95"
+                      className={`w-full text-xs font-heading font-semibold py-2 px-3 rounded-xl text-white transition-all ${
+                        v.stock === 0
+                          ? 'opacity-40 cursor-not-allowed'
+                          : 'hover:opacity-90 active:scale-95'
+                      }`}
                       style={{ backgroundColor: cat.accentColor }}
                     >
-                      + Keranjang
+                      {v.stock === 0 ? 'Habis' : '+ Keranjang'}
                     </button>
                   </>
                 ) : (

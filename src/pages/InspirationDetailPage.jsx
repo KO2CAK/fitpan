@@ -6,6 +6,7 @@ import { useBlogPost, useBlogs } from '../hooks/useSupabase'
 export default function InspirationDetailPage() {
   const { id } = useParams()
   const { post, loading } = useBlogPost(id)
+  const { posts: allPosts } = useBlogs()
 
   if (loading) {
     return (
@@ -18,7 +19,6 @@ export default function InspirationDetailPage() {
   if (!post) return <Navigate to="/inspiration" replace />
 
   const relatedProduct = null
-  const { posts: allPosts } = useBlogs()
   const otherPosts = allPosts.filter((p) => p.id !== id).slice(0, 3)
 
   // Split content into paragraphs
