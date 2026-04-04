@@ -90,3 +90,42 @@ CREATE TRIGGER update_web_testimonials_modtime BEFORE UPDATE ON web_testimonials
 -- 3. Set to Public
 -- 4. Add policy: SELECT (Public Read) for authenticated & anonymous users
 -- 5. Add policy: INSERT for authenticated users (for admin uploads)
+
+-- ============================================================
+-- Table: web_counters  (tracks user interaction counts)
+-- ============================================================
+CREATE TABLE IF NOT EXISTS web_counters (
+  id TEXT PRIMARY KEY,
+  count INTEGER NOT NULL DEFAULT 0,
+  updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+-- Enable RLS + allow public read
+ALTER TABLE web_counters ENABLE ROW LEVEL SECURITY;
+CREATE POLICY "Allow public read access" ON web_counters FOR SELECT USING (true);
+
+-- Seed: "Beli Sekarang" button starts at 209 clicks
+INSERT INTO web_counters (id, count) VALUES ('beli_sekarang', 209)
+  ON CONFLICT (id) DO NOTHING;
+
+-- Atomic increment function (prevents race conditions)
+CREATE OR REPLACE FUNCTION increment_beli_counter()
+RETURNS INTEGER AS $$
+DECLARE
+  new_count INTEGER;
+BEGIN
+  UPDATE web_counters
+  SET count = count + 1,
+      updated_at = CURRENT_TIMESTAMP
+  WHERE id = 'beli_sekarang'
+  RETURNING count INTO new_count;
+
+  -- If row didn't exist yet, create it
+  IF new_count IS NULL THEN
+    INSERT INTO web_counters (id, count) VALUES ('beli_sekarang', 210)
+    RETURNING count INTO new_count;
+  END IF;
+
+  RETURN new_count;
+END;
+$$ LANGUAGE plpgsql SECURITY DEFINER;

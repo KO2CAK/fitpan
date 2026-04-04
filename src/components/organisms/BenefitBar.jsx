@@ -1,5 +1,5 @@
 import { motion } from 'framer-motion'
-import { Leaf, TrendingUp, Zap } from 'lucide-react'
+import { Leaf, TrendingUp, ShieldCheck } from 'lucide-react'
 
 // Benefit Bar Component - Organism
 export default function BenefitBar() {
@@ -15,9 +15,9 @@ export default function BenefitBar() {
       description: 'Kontrol gula darah dengan formula spesial',
     },
     {
-      icon: Zap,
-      title: 'Energi Stabil',
-      description: 'Daya tahan sepanjang hari tanpa crash',
+      icon: ShieldCheck,
+      title: 'Tanpa Bahan Pengawet',
+      description: 'Diproduksi tanpa bahan pengawet — murni alami, aman dikonsumsi setiap hari',
     },
   ]
 

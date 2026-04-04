@@ -1,8 +1,9 @@
 import { useState, useRef, useEffect } from 'react'
 import { Link, NavLink } from 'react-router-dom'
-import { Menu, X, ChevronDown } from 'lucide-react'
+import { Menu, X, ChevronDown, ShoppingCart } from 'lucide-react'
 import Button from '../atoms/Button'
 import logo from '../../assets/logo.png'
+import { useCart } from '../../context/CartContext'
 
 const productSubLinks = [
   { to: '/products/buah',  label: 'Fitpan Buah',  emoji: '🍎' },
@@ -72,6 +73,7 @@ function ProductsDropdown() {
 export default function Navbar() {
   const [mobileOpen, setMobileOpen] = useState(false)
   const [mobileProductsOpen, setMobileProductsOpen] = useState(false)
+  const { totalItems, setIsCartOpen } = useCart()
 
   const navLinks = [
     { to: '/', label: 'Home' },
@@ -120,6 +122,19 @@ export default function Navbar() {
 
         {/* CTA + Hamburger */}
         <div className="flex items-center gap-3">
+          {/* Cart icon */}
+          <button
+            onClick={() => setIsCartOpen(true)}
+            className="relative p-2 rounded-lg hover:bg-gray-100 transition-colors"
+            title="Keranjang Belanja"
+          >
+            <ShoppingCart size={20} className="text-gray-600" />
+            {totalItems > 0 && (
+              <span className="absolute -top-1 -right-1 w-5 h-5 bg-accent-500 text-white text-[10px] font-bold rounded-full flex items-center justify-center">
+                {totalItems > 9 ? '9+' : totalItems}
+              </span>
+            )}
+          </button>
           <Link to="/distributor">
             <Button variant="primary" size="sm">Beli Sekarang</Button>
           </Link>

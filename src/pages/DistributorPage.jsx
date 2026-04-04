@@ -65,7 +65,7 @@ export default function DistributorPage() {
             className="flex flex-col sm:flex-row gap-4 justify-center"
           >
             <a
-              href="https://wa.me/6281234567890?text=Halo%20Fitpan%2C%20saya%20ingin%20membeli%20produk%20Fitpan"
+              href="https://wa.me/628983487706?text=Halo%20Fitpan%2C%20saya%20ingin%20membeli%20produk%20Fitpan"
               target="_blank"
               rel="noreferrer"
             >

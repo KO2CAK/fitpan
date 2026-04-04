@@ -6,6 +6,7 @@ import Button from '../components/atoms/Button'
 import { productCategories } from '../data/products'
 import { inspirationPosts } from '../data/inspiration'
 import photoOfProduct from '../assets/PhotoOfProduct-2.jpeg'
+import { useBeliCounter } from '../hooks/useSupabase'
 
 // ─── Gut Health Section ────────────────────────────────────────────────────
 function GutHealthSection() {
@@ -173,6 +174,7 @@ function UsageTimingSection() {
 
 // ─── Testimonials Strip ────────────────────────────────────────────────────
 function TestimonialsStrip() {
+  const { count } = useBeliCounter()
   const quotes = [
     { text: '"Fitpan beneran mengubah kebiasaan snacking saya. Berat badan turun, energy stabil!"', name: 'Siti, Balikpapan' },
     { text: '"Sebagai atlet, recovery pakai Fitpan Edamame enak banget. Highly recommended!"', name: 'Budi, Pelari Maraton' },
@@ -191,7 +193,7 @@ function TestimonialsStrip() {
         >
           <h2 className="text-h2 text-primary-800 mb-3">
             Dicintai & Direkomendasikan oleh{' '}
-            <span className="text-accent-500">10,000+ Orang</span>
+            <span className="text-accent-500">{count.toLocaleString('id-ID')}+ Orang</span>
           </h2>
           <Link to="/inspiration">
             <Button variant="outline">Lihat Semua Cerita</Button>
@@ -279,7 +281,7 @@ function InspirationPreview() {
 function FAQSection() {
   const faqs = [
     { q: 'Apakah Fitpan termasuk obat-obatan?', a: 'Fitpan bukan obat-obatan. Fitpan merupakan snack multigrain premium yang terbuat dari 100% bahan alami.' },
-    { q: 'Apakah sudah bersertifikat Halal?', a: 'Ya, Fitpan telah mendapatkan sertifikasi Halal dan telah melalui uji lab independen untuk keamanan maksimal.' },
+    // { q: 'Apakah sudah bersertifikat Halal?', a: 'Ya, Fitpan telah mendapatkan sertifikasi Halal dan telah melalui uji lab independen untuk keamanan maksimal.' },
     { q: 'Bagaimana cara mengonsumsi Fitpan?', a: 'Fitpan dapat dikonsumsi langsung sebagai snack, atau disajikan bersama minuman hangat/dingin sesuai selera.' },
     { q: 'Siapa saja yang bisa mengonsumsi Fitpan?', a: 'Fitpan cocok untuk semua kalangan — dari anak-anak usia 5 tahun hingga lansia. Namun konsultasikan dengan dokter jika Anda memiliki kondisi medis khusus.' },
   ]

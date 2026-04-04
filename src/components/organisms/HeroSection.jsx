@@ -1,9 +1,18 @@
 import { motion } from 'framer-motion'
-import { Link } from 'react-router-dom'
+import { useNavigate } from 'react-router-dom'
 import Button from '../atoms/Button'
 import photoOfProduct from '../../assets/PhotoOfProduct.jpeg'
+import { useBeliCounter } from '../../hooks/useSupabase'
 
 export default function HeroSection() {
+  const navigate = useNavigate()
+  const { count, increment } = useBeliCounter()
+
+  const handleBeliSekarang = () => {
+    increment()
+    navigate('/products')
+  }
+
   const containerVariants = {
     hidden: { opacity: 0 },
     visible: { opacity: 1, transition: { staggerChildren: 0.18, delayChildren: 0.1 } },
@@ -49,12 +58,10 @@ export default function HeroSection() {
           </motion.p>
 
           <motion.div variants={itemVariants} className="flex flex-wrap gap-4">
-            <Link to="/distributor">
-              <Button variant="primary" size="lg">Beli Sekarang</Button>
-            </Link>
-            <Link to="/products">
+            <Button variant="primary" size="lg" onClick={handleBeliSekarang}>Beli Sekarang</Button>
+            <a href="/products">
               <Button variant="outline" size="lg">Lihat Semua Produk</Button>
-            </Link>
+            </a>
           </motion.div>
 
           <motion.div variants={itemVariants} className="flex items-center gap-4 pt-2">
@@ -69,7 +76,7 @@ export default function HeroSection() {
               ))}
             </div>
             <p className="text-body-sm text-gray-600">
-              <span className="font-bold text-primary-700">10,000+</span> pelanggan puas
+              <span className="font-bold text-primary-700">{count.toLocaleString('id-ID')}</span> orang sudah beli
             </p>
           </motion.div>
         </div>
@@ -85,9 +92,9 @@ export default function HeroSection() {
               />
             </div>
             {/* Floating badges */}
-            <div className="absolute -top-4 -right-4 bg-white shadow-lg rounded-xl px-3 py-2 text-xs font-bold text-primary-600 border border-primary-100">
+            {/* <div className="absolute -top-4 -right-4 bg-white shadow-lg rounded-xl px-3 py-2 text-xs font-bold text-primary-600 border border-primary-100">
               ✓ Halal Certified
-            </div>
+            </div> */}
             <div className="absolute -bottom-4 -left-4 bg-white shadow-lg rounded-xl px-3 py-2 text-xs font-bold text-accent-600 border border-accent-100">
               🌾 Tinggi Serat
             </div>

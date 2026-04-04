@@ -51,12 +51,12 @@ export default function Footer() {
             <h5 className="font-heading font-bold text-accent-300 uppercase tracking-widest text-xs mb-4">Follow</h5>
             <ul className="space-y-2 text-body-sm text-primary-200">
               <li>
-                <a href="https://instagram.com" target="_blank" rel="noreferrer" className="flex items-center gap-2 hover:text-white transition-colors">
+                <a href="https://www.instagram.com/fitpan_balikpapan?utm_source=qr&igsh=MWFzZzQ4dzB3MHIwaA==" target="_blank" rel="noreferrer" className="flex items-center gap-2 hover:text-white transition-colors">
                   <Instagram size={14} /> Instagram
                 </a>
               </li>
               <li>
-                <a href="https://tiktok.com" target="_blank" rel="noreferrer" className="flex items-center gap-2 hover:text-white transition-colors">
+                <a href="https://tiktok.com/@fitpan_balikpapan" target="_blank" rel="noreferrer" className="flex items-center gap-2 hover:text-white transition-colors">
                   <span className="text-xs font-bold">TT</span> TikTok
                 </a>
               </li>

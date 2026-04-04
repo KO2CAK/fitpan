@@ -3,10 +3,12 @@ import { motion } from 'framer-motion'
 import { useParams, Link, Navigate } from 'react-router-dom'
 import { productCategories } from '../data/products'
 import Button from '../components/atoms/Button'
+import { useCart } from '../context/CartContext'
 
 export default function ProductDetailPage() {
   const { id } = useParams()
   const [search, setSearch] = useState('')
+  const { addToCart, setIsCartOpen } = useCart()
 
   const cat = productCategories.find((c) => c.id === id)
   if (!cat) return <Navigate to="/products" replace />
@@ -48,14 +50,14 @@ export default function ProductDetailPage() {
               </h1>
               <p className="text-body-md text-gray-700 leading-relaxed">{cat.description}</p>
               <div className="flex flex-wrap gap-3">
-                <Link to="/distributor">
+                <a href="#variants-grid">
                   <button
                     className="flex items-center gap-2 px-4 py-2.5 rounded-xl font-heading font-semibold text-sm text-white transition-all hover:opacity-90"
                     style={{ backgroundColor: cat.accentColor }}
                   >
-                    Beli Sekarang →
+                    Pilih Produk →
                   </button>
-                </Link>
+                </a>
               </div>
             </motion.div>
 
@@ -91,7 +93,7 @@ export default function ProductDetailPage() {
       </div>
 
       {/* Variants Grid */}
-      <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-14">
+      <div id="variants-grid" className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-14">
         {filtered.length === 0 ? (
           <div className="text-center py-20 text-gray-400">
             <p className="text-4xl mb-3">🔍</p>
@@ -114,9 +116,26 @@ export default function ProductDetailPage() {
                   <p className="text-xs text-gray-500 leading-snug">{v.desc}</p>
                 )}
                 {v.price ? (
-                  <p className={`text-sm font-bold ${cat.textColor} mt-auto`}>
-                    Rp {v.price.toLocaleString('id-ID')}
-                  </p>
+                  <>
+                    <p className={`text-sm font-bold ${cat.textColor} mt-auto`}>
+                      Rp {v.price.toLocaleString('id-ID')}
+                    </p>
+                    <button
+                      onClick={() =>
+                        addToCart({
+                          id: `${cat.id}-${v.id}`,
+                          name: v.name,
+                          emoji: v.emoji,
+                          price: v.price,
+                          categoryName: cat.name,
+                        })
+                      }
+                      className="w-full text-xs font-heading font-semibold py-2 px-3 rounded-xl text-white transition-all hover:opacity-90 active:scale-95"
+                      style={{ backgroundColor: cat.accentColor }}
+                    >
+                      + Keranjang
+                    </button>
+                  </>
                 ) : (
                   <Link to="/distributor" className={`text-xs font-semibold ${cat.textColor} hover:underline mt-auto`}>
                     Hubungi Kami
@@ -143,9 +162,7 @@ export default function ProductDetailPage() {
             </p>
           </div>
           <div className="flex gap-3 flex-shrink-0">
-            <Link to="/distributor">
-              <Button variant="primary">Beli Sekarang</Button>
-            </Link>
+            <Button variant="primary" onClick={() => setIsCartOpen(true)}>Lihat Keranjang</Button>
           </div>
         </motion.div>
       </div>
