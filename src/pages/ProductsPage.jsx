@@ -17,10 +17,11 @@ function CategoryCard({ cat, index }) {
       <Link to={`/products/${cat.id}`} className="group block h-full">
         <div className={`bg-gradient-to-br ${cat.bgClass} rounded-3xl overflow-hidden shadow-sm hover:shadow-xl transition-all duration-300 h-full flex flex-col`}>
           {/* Visual header */}
-          <div className="relative h-52 flex items-center justify-center">
-            <span className="text-[7rem] group-hover:scale-110 transition-transform duration-500">
-              {cat.emoji}
-            </span>
+          <div className="relative h-52 flex items-center justify-center overflow-hidden">
+            {cat.variants[0]?.image_url
+              ? <img src={cat.variants[0].image_url} alt={cat.name} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
+              : <span className="text-[7rem] group-hover:scale-110 transition-transform duration-500">{cat.emoji}</span>
+            }
             <div
               className="absolute top-4 right-4 text-xs font-heading font-bold px-3 py-1.5 rounded-full text-white shadow-sm"
               style={{ backgroundColor: cat.accentColor }}

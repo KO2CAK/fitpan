@@ -92,7 +92,10 @@ export default function CartModal() {
                   key={item.id}
                   className="flex items-center gap-3 bg-gray-50 rounded-2xl p-3"
                 >
-                  <span className="text-2xl flex-shrink-0">{item.emoji}</span>
+                  {item.image_url
+                    ? <img src={item.image_url} alt={item.name} className="w-12 h-12 rounded-xl object-cover flex-shrink-0" />
+                    : <span className="text-2xl flex-shrink-0">{item.emoji}</span>
+                  }
                   <div className="flex-1 min-w-0">
                     <p className="font-heading font-semibold text-sm text-primary-800 truncate">{item.name}</p>
                     <p className="text-xs text-gray-500">{item.categoryName}</p>

@@ -3,10 +3,8 @@ import { Link } from 'react-router-dom'
 import HeroSection from '../components/organisms/HeroSection'
 import BenefitBar from '../components/organisms/BenefitBar'
 import Button from '../components/atoms/Button'
-import { productCategories } from '../data/products'
-import { inspirationPosts as staticInspiration } from '../data/inspiration'
 import photoOfProduct from '../assets/PhotoOfProduct-2.jpeg'
-import { useBeliCounter, useFetchTestimonials, useBlogs } from '../hooks/useSupabase'
+import { useBeliCounter, useFetchTestimonials, useBlogs, useWebProductCategories } from '../hooks/useSupabase'
 
 // ─── Gut Health Section ────────────────────────────────────────────────────
 function GutHealthSection() {
@@ -34,9 +32,9 @@ function GutHealthSection() {
               Fitpan diolah dengan teknologi khusus yang menjaga kandungan serat dan nutrisi alami dari buah dan sayur.
               Namun nutrisi dari fitpan tidak sebesar buah dan sayur alami.
             </p>
-            <Link to="/products" onClick={increment}>
+            {/* <Link to="/products" onClick={increment}>
               <Button variant="accent" size="lg">Lihat Semua Produk</Button>
-            </Link>
+            </Link> */}
           </div>
           <div className="flex items-center justify-center">
             <div className="rounded-3xl overflow-hidden shadow-2xl border-4 border-primary-700 max-w-sm w-full">
@@ -52,6 +50,7 @@ function GutHealthSection() {
 // ─── Products Showcase Section ─────────────────────────────────────────────
 function ProductsShowcase() {
   const { increment } = useBeliCounter()
+  const { categories: productCategories } = useWebProductCategories()
   return (
     <section className="py-20 bg-background-light">
       <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -82,10 +81,11 @@ function ProductsShowcase() {
             >
               <Link to={`/products/${cat.id}`} className="group block h-full">
                 <div className={`bg-gradient-to-br ${cat.bgClass} rounded-3xl overflow-hidden shadow-sm hover:shadow-xl transition-all duration-300 h-full flex flex-col`}>
-                  <div className="h-48 flex items-center justify-center relative">
-                    <span className="text-[6rem] group-hover:scale-110 transition-transform duration-500">
-                      {cat.emoji}
-                    </span>
+                  <div className="h-48 flex items-center justify-center relative overflow-hidden">
+                    {cat.variants[0]?.image_url
+                      ? <img src={cat.variants[0].image_url} alt={cat.name} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
+                      : <span className="text-[6rem] group-hover:scale-110 transition-transform duration-500">{cat.emoji}</span>
+                    }
                     <span
                       className="absolute top-4 right-4 text-xs font-bold px-2.5 py-1 rounded-full text-white"
                       style={{ backgroundColor: cat.accentColor }}
@@ -178,12 +178,22 @@ function UsageTimingSection() {
 // ─── Testimonials Strip ────────────────────────────────────────────────────
 function TestimonialsStrip() {
   const { count } = useBeliCounter()
-  const quotes = [
+  const { testimonials, loading } = useFetchTestimonials()
+
+  const staticQuotes = [
     { text: '"Fitpan beneran mengubah kebiasaan snacking saya. Berat badan turun, energy stabil!"', name: 'Siti, Balikpapan' },
     { text: '"Sebagai atlet, recovery pakai Fitpan Edamame enak banget. Highly recommended!"', name: 'Budi, Pelari Maraton' },
     { text: '"Kolesterol saya turun 55 poin dalam 3 bulan. Gak nyangka efeknya sebesar ini."', name: 'Rara, Ibu Rumah Tangga' },
     { text: '"Praktis banget buat sarapan di kantor. Gak perlu repot, nutrisi tetap terjaga."', name: 'Dina, Karyawan' },
   ]
+
+  const quotes = testimonials.length > 0
+    ? testimonials.slice(0, 4).map((t) => ({
+        text: `"${t.review_text}"`,
+        name: t.customer_name,
+        rating: t.rating,
+      }))
+    : staticQuotes
 
   return (
     <section className="py-20 bg-white">
@@ -213,6 +223,9 @@ function TestimonialsStrip() {
               transition={{ delay: i * 0.1 }}
               className="bg-background-light rounded-2xl p-7 border border-background-muted"
             >
+              {q.rating && (
+                <p className="text-accent-400 text-sm mb-2">{'⭐'.repeat(q.rating)}</p>
+              )}
               <p className="text-body-md text-gray-700 italic mb-4">{q.text}</p>
               <p className="text-body-sm font-bold text-primary-600">— {q.name}</p>
             </motion.div>

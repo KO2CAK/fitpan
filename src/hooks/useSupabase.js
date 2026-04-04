@@ -1,7 +1,6 @@
 import { useState, useEffect } from 'react'
 import { createClient } from '@supabase/supabase-js'
-import { productCategories as staticCategories } from '../data/products'
-import { inspirationPosts as staticPosts } from '../data/inspiration'
+const staticCategories = []
 
 const supabaseUrl = import.meta.env.VITE_SUPABASE_URL
 const supabaseKey = import.meta.env.VITE_SUPABASE_ANON_KEY
@@ -93,7 +92,7 @@ function deriveCategoryId(catName) {
 }
 
 export function useWebProductCategories() {
-  const [categories, setCategories] = useState(staticCategories)
+  const [categories, setCategories] = useState([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState(null)
 
@@ -120,7 +119,7 @@ export function useWebProductCategories() {
         if (prodError) throw prodError
         if (!products || products.length === 0) {
           setLoading(false)
-          return // keep static fallback
+          return
         }
 
         // Build a category id → name lookup
@@ -152,7 +151,7 @@ export function useWebProductCategories() {
             return {
               id: p.slug || p.name.toLowerCase().replace(/\s+/g, '-').replace(/[^a-z0-9-]/g, ''),
               name: p.name,
-              emoji: staticVariant?.emoji || staticCat?.emoji || '🌿',
+              emoji: staticVariant?.emoji || staticCat?.emoji || '',
               price: p.price,
               desc: p.web_description || undefined,
               image_url: p.image_url || undefined,
@@ -165,7 +164,7 @@ export function useWebProductCategories() {
             subtitle: staticCat?.subtitle || 'Produk Fitpan',
             tagline: staticCat?.tagline || '',
             description: staticCat?.description || '',
-            emoji: staticCat?.emoji || '🌿',
+            emoji: staticCat?.emoji || '',
             bgClass: staticCat?.bgClass || 'from-gray-50 to-slate-50',
             accentColor: staticCat?.accentColor || '#16A34A',
             textColor: staticCat?.textColor || 'text-green-700',
@@ -183,18 +182,9 @@ export function useWebProductCategories() {
           return (ai === -1 ? 99 : ai) - (bi === -1 ? 99 : bi)
         })
 
-        // Guard: if ALL products ended up in 'Lainnya', categories couldn't be resolved
-        // — keep static fallback rather than showing a useless single card
-        const hasRealCategories = liveCategories.some((c) => c.id !== 'lainnya')
-        if (!hasRealCategories) {
-          setLoading(false)
-          return
-        }
-
         setCategories(liveCategories)
       } catch (err) {
         setError(err.message)
-        // keep static fallback
       } finally {
         setLoading(false)
       }
@@ -240,13 +230,12 @@ function mapBlogToPost(blog) {
 }
 
 export function useBlogs() {
-  const [posts, setPosts] = useState(null)
+  const [posts, setPosts] = useState([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState(null)
 
   useEffect(() => {
     if (!supabase) {
-      setPosts(staticPosts)
       setLoading(false)
       return
     }
@@ -260,14 +249,9 @@ export function useBlogs() {
           .order('published_at', { ascending: false })
 
         if (error) throw error
-        if (data && data.length > 0) {
-          setPosts(data.map(mapBlogToPost))
-        } else {
-          setPosts(staticPosts) // fallback if no published blogs yet
-        }
+        setPosts(data ? data.map(mapBlogToPost) : [])
       } catch (err) {
         setError(err.message)
-        setPosts(staticPosts) // fallback on error
       } finally {
         setLoading(false)
       }
@@ -276,7 +260,7 @@ export function useBlogs() {
     fetchBlogs()
   }, [])
 
-  return { posts: posts ?? staticPosts, loading, error }
+  return { posts, loading, error }
 }
 
 export function useBlogPost(slug) {
@@ -285,10 +269,8 @@ export function useBlogPost(slug) {
 
   useEffect(() => {
     if (!slug) return
-    const staticPost = staticPosts.find((p) => p.id === slug)
 
     if (!supabase) {
-      setPost(staticPost || null)
       setLoading(false)
       return
     }
@@ -302,9 +284,9 @@ export function useBlogPost(slug) {
           .eq('status', 'published')
           .single()
 
-        setPost(data ? mapBlogToPost(data) : staticPost || null)
+        setPost(data ? mapBlogToPost(data) : null)
       } catch {
-        setPost(staticPost || null)
+        setPost(null)
       } finally {
         setLoading(false)
       }

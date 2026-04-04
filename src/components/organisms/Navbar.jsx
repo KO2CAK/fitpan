@@ -137,7 +137,7 @@ export default function Navbar() {
               </span>
             )}
           </button>
-          <Link to="/distributor" onClick={increment}>
+          <Link to="/products" onClick={increment}>
             <Button variant="primary" size="sm">Beli Sekarang</Button>
           </Link>
           <button

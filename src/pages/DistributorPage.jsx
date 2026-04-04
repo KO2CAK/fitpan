@@ -86,11 +86,10 @@ export default function DistributorPage() {
           <p className="text-center text-xs font-heading font-bold tracking-widest uppercase text-primary-500 mb-8">
             Juga tersedia di
           </p>
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
+          <div className="flex flex-wrap justify-center gap-6">
             {[
               { name: 'Shopee', emoji: '🛍️', href: 'https://shopee.co.id', color: 'bg-orange-50 text-orange-700' },
               { name: 'Tokopedia', emoji: '🟢', href: 'https://tokopedia.com', color: 'bg-green-50 text-green-700' },
-              { name: 'Lazada', emoji: '🔵', href: 'https://lazada.co.id', color: 'bg-blue-50 text-blue-700' },
               { name: 'TikTok Shop', emoji: '🎵', href: 'https://tiktok.com', color: 'bg-pink-50 text-pink-700' },
             ].map((s) => (
               <motion.a

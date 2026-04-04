@@ -1,9 +1,7 @@
 import { motion } from 'framer-motion'
 import { useParams, Link, Navigate } from 'react-router-dom'
-import { products } from '../data/products'
-import { inspirationPosts as staticPosts } from '../data/inspiration'
 import Button from '../components/atoms/Button'
-import { useBlogPost } from '../hooks/useSupabase'
+import { useBlogPost, useBlogs } from '../hooks/useSupabase'
 
 export default function InspirationDetailPage() {
   const { id } = useParams()
@@ -19,8 +17,9 @@ export default function InspirationDetailPage() {
 
   if (!post) return <Navigate to="/inspiration" replace />
 
-  const relatedProduct = post.relatedProduct ? products.find((p) => p.id === post.relatedProduct) : null
-  const otherPosts = staticPosts.filter((p) => p.id !== id).slice(0, 3)
+  const relatedProduct = null
+  const { posts: allPosts } = useBlogs()
+  const otherPosts = allPosts.filter((p) => p.id !== id).slice(0, 3)
 
   // Split content into paragraphs
   const paragraphs = post.content.trim().split('\n\n').filter(Boolean)

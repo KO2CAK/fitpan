@@ -1,5 +1,5 @@
-import { useState } from 'react'
-import { motion } from 'framer-motion'
+import { useState, useEffect } from 'react'
+import { motion, AnimatePresence } from 'framer-motion'
 import { useParams, Link, Navigate } from 'react-router-dom'
 import Button from '../components/atoms/Button'
 import { useCart } from '../context/CartContext'
@@ -10,8 +10,20 @@ export default function ProductDetailPage() {
   const [search, setSearch] = useState('')
   const { addToCart, setIsCartOpen } = useCart()
   const { categories: productCategories, loading } = useWebProductCategories()
+  const [slideIndex, setSlideIndex] = useState(0)
 
   const cat = productCategories.find((c) => c.id === id)
+
+  // Derive images before any early return (hooks must run unconditionally)
+  const images = cat ? cat.variants.filter((v) => v.image_url).map((v) => ({ url: v.image_url, name: v.name })) : []
+
+  // Auto-advance carousel every 2.5 s
+  useEffect(() => {
+    if (images.length <= 1) return
+    const timer = setInterval(() => setSlideIndex((i) => (i + 1) % images.length), 2500)
+    return () => clearInterval(timer)
+  }, [images.length])
+
   if (!loading && !cat) return <Navigate to="/products" replace />
   if (!cat) return (
     <div className="flex items-center justify-center min-h-screen">
@@ -73,7 +85,42 @@ export default function ProductDetailPage() {
               transition={{ duration: 0.6, delay: 0.1 }}
               className="flex items-center justify-center"
             >
-              <div className="text-[9rem] drop-shadow-md">{cat.emoji}</div>
+              {images.length > 0 ? (
+                <div className="relative w-full max-w-sm aspect-square rounded-3xl overflow-hidden shadow-2xl">
+                  <AnimatePresence mode="wait">
+                    <motion.img
+                      key={images[slideIndex].url}
+                      src={images[slideIndex].url}
+                      alt={images[slideIndex].name}
+                      className="w-full h-full object-cover absolute inset-0"
+                      initial={{ opacity: 0, scale: 1.04 }}
+                      animate={{ opacity: 1, scale: 1 }}
+                      exit={{ opacity: 0, scale: 0.97 }}
+                      transition={{ duration: 0.5 }}
+                    />
+                  </AnimatePresence>
+                  {/* Dot indicators */}
+                  {images.length > 1 && (
+                    <div className="absolute bottom-3 left-0 right-0 flex justify-center gap-1.5">
+                      {images.map((_, i) => (
+                        <button
+                          key={i}
+                          onClick={() => setSlideIndex(i)}
+                          className={`w-2 h-2 rounded-full transition-all ${
+                            i === slideIndex ? 'bg-white scale-125' : 'bg-white/50'
+                          }`}
+                        />
+                      ))}
+                    </div>
+                  )}
+                  {/* Current product label */}
+                  <div className="absolute top-3 left-3 bg-black/40 backdrop-blur-sm text-white text-xs font-semibold px-2.5 py-1 rounded-full">
+                    {images[slideIndex].name}
+                  </div>
+                </div>
+              ) : (
+                <div className="text-[9rem] drop-shadow-md">{cat.emoji}</div>
+              )}
             </motion.div>
           </div>
         </div>
@@ -114,9 +161,13 @@ export default function ProductDetailPage() {
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
                 transition={{ delay: (i % 5) * 0.06 }}
-                className={`bg-gradient-to-br ${cat.bgClass} border ${cat.borderColor} rounded-2xl p-5 flex flex-col items-center text-center gap-3 hover:shadow-md transition-shadow`}
+                className={`bg-gradient-to-br ${cat.bgClass} border ${cat.borderColor} rounded-2xl overflow-hidden flex flex-col items-center text-center gap-3 hover:shadow-md transition-shadow`}
               >
-                <span className="text-4xl">{v.emoji}</span>
+                {v.image_url
+                  ? <img src={v.image_url} alt={v.name} className="w-full h-36 object-cover" />
+                  : <span className="text-4xl pt-5">{v.emoji}</span>
+                }
+                <div className="px-4 pb-4 flex flex-col items-center gap-3 w-full">
                 <p className="font-heading font-bold text-sm text-primary-800 leading-tight">{v.name}</p>
                 {v.desc && (
                   <p className="text-xs text-gray-500 leading-snug">{v.desc}</p>
@@ -132,6 +183,7 @@ export default function ProductDetailPage() {
                           id: `${cat.id}-${v.id}`,
                           name: v.name,
                           emoji: v.emoji,
+                          image_url: v.image_url || null,
                           price: v.price,
                           categoryName: cat.name,
                         })
@@ -147,35 +199,27 @@ export default function ProductDetailPage() {
                     Hubungi Kami
                   </Link>
                 )}
+                </div>
               </motion.div>
             ))}
           </div>
         )}
 
-        {/* Order CTA */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          className="mt-14 bg-white border border-gray-100 rounded-3xl p-8 flex flex-col md:flex-row items-center justify-between gap-6 shadow-sm"
-        >
-          <div>
-            <h3 className="font-heading font-bold text-xl text-primary-800 mb-1">
-              Tertarik dengan {cat.name}?
-            </h3>
-            <p className="text-body-sm text-gray-500">
-              Hubungi distributor resmi kami untuk pemesanan.
-            </p>
-          </div>
-          <div className="flex gap-3 flex-shrink-0">
-            <Button variant="primary" onClick={() => setIsCartOpen(true)}>Lihat Keranjang</Button>
-          </div>
-        </motion.div>
+
       </div>
 
       {/* Other Categories */}
       <div className="bg-background-darker py-14">
         <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+        {/* Order CTA */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          className="rounded-3xl p-2 flex justify-center"
+        >
+          <Button variant="primary" onClick={() => setIsCartOpen(true)}>Lihat Keranjang</Button>
+        </motion.div>
           <h2 className="font-heading font-bold text-2xl text-primary-800 mb-8">Kategori Lainnya</h2>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             {others.map((o) => (
