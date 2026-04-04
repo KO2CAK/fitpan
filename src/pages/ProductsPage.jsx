@@ -2,8 +2,10 @@ import { motion } from 'framer-motion'
 import { Link } from 'react-router-dom'
 import { productCategories } from '../data/products'
 import Button from '../components/atoms/Button'
+import { useBeliCounter } from '../hooks/useSupabase'
 
 // ─── Category Card ─────────────────────────────────────────────────────────
+
 function CategoryCard({ cat, index }) {
   return (
     <motion.div
@@ -69,6 +71,7 @@ function CategoryCard({ cat, index }) {
 
 // ─── ProductsPage ──────────────────────────────────────────────────────────
 export default function ProductsPage() {
+  const { count } = useBeliCounter()
   return (
     <div className="min-h-screen bg-background-light">
       {/* Page Header */}
@@ -103,9 +106,9 @@ export default function ProductsPage() {
             transition={{ delay: 0.3 }}
             className="flex flex-wrap gap-3 justify-center"
           >
-            <Link to="/distributor">
+            {/* <Link to="/distributor">
               <Button variant="accent">Beli Sekarang</Button>
-            </Link>
+            </Link> */}
           </motion.div>
         </div>
       </div>
@@ -118,7 +121,7 @@ export default function ProductsPage() {
               { label: 'Kategori', value: '3' },
               { label: 'Total Varian', value: `${productCategories.reduce((a, c) => a + c.variants.length, 0)}+` },
               { label: 'Tanpa Pengawet', value: '100%' },
-              { label: 'Pelanggan Puas', value: '10K+' },
+              { label: 'Pelanggan Puas', value: `${count.toLocaleString('id-ID')}+` },
             ].map((s) => (
               <div key={s.label}>
                 <p className="text-2xl font-heading font-bold text-primary-700">{s.value}</p>
@@ -145,8 +148,8 @@ export default function ProductsPage() {
             {[
               { icon: '🌿', title: 'Tanpa MSG', desc: 'Bebas MSG & bahan kimia berbahaya' },
               { icon: '🚫', title: 'Tanpa Pengawet', desc: 'Alami 100%, tanpa bahan pengawet' },
-              { icon: '⚡', title: 'Vacuum Frying', desc: 'Proses vakum, rendah minyak' },
-              { icon: '✅', title: 'Halal Certified', desc: 'Bersertifikat halal resmi' },
+              { icon: '⚡', title: 'Vacuum Frying', desc: 'Proses vakum, high quality of packaging' },
+              { icon: '✅', title: 'Tanpa Minyak', desc: 'Proses tanpa minyak tambahan' },
             ].map((f) => (
               <div key={f.title} className="space-y-2">
                 <div className="text-3xl">{f.icon}</div>

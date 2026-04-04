@@ -25,12 +25,13 @@ function GutHealthSection() {
               Mengapa Fitpan?
             </p>
             <h2 className="text-3xl md:text-4xl font-heading font-bold leading-tight">
-              Semua kesehatan dimulai dari{' '}
-              <span className="text-accent-400">pencernaan yang baik</span>
+              Untuk sehat{' '}
+              <span className="text-accent-400">tetap harus enak</span>
             </h2>
             <p className="text-primary-200 text-body-md leading-relaxed">
-              Tak pernah ada kata terlambat untuk hidup sehat. Mulailah dari pola makan yang lebih baik —
-              Fitpan membantu mengatasi masalah pencernaan, kolesterol tinggi, dan kelebihan berat badan.
+              Fitpan merupakan produk olahan buah dan sayur segar yang diolah tanpa minyak, tanpa bahan pengawet ataupun bahan berbahaya.
+              Fitpan diolah dengan teknologi khusus yang menjaga kandungan serat dan nutrisi alami dari buah dan sayur.
+              Namun nutrisi dari fitpan tidak sebesar buah dan sayur alami.
             </p>
             <Link to="/products">
               <Button variant="accent" size="lg">Lihat Semua Produk</Button>
