@@ -90,8 +90,11 @@ export default function InspirationDetailPage() {
                 to={`/inspiration/${p.id}`}
                 className="group bg-background-light rounded-2xl overflow-hidden border border-background-muted hover:shadow-md transition-shadow"
               >
-                <div className={`h-36 ${p.avatarBg} flex items-center justify-center`}>
-                  <span className="text-5xl">{p.avatar}</span>
+                <div className={`h-36 ${p.avatarBg || 'bg-primary-50'} flex items-center justify-center overflow-hidden`}>
+                  {p.avatarImg
+                    ? <img src={p.avatarImg} alt={p.title} className="w-full h-full object-cover" />
+                    : <span className="text-5xl">{p.avatar}</span>
+                  }
                 </div>
                 <div className="p-4">
                   <p className="text-xs text-accent-600 font-bold uppercase tracking-wide mb-1">{p.category}</p>
