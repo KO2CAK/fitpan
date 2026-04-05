@@ -87,8 +87,11 @@ export default function Navbar() {
     <nav className="sticky top-0 z-50 bg-white/95 backdrop-blur-md border-b border-gray-100 shadow-sm">
       <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-3 flex items-center justify-between">
         {/* Logo */}
-        <Link to="/" className="flex items-center">
+        <Link to="/" className="flex items-center gap-2">
           <img src={logo} alt="Fitpan" className="h-10 w-auto object-contain" />
+          <span className="font-heading font-bold text-lg tracking-tight leading-none">
+            <span className="text-green-600">FIT</span><span className="text-orange-500">PAN</span>
+          </span>
         </Link>
 
         {/* Nav Links Desktop */}
