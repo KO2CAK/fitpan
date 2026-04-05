@@ -241,7 +241,7 @@ function mapBlogToPost(blog) {
     avatarBg: 'bg-primary-50',
     preview,
     content: blog.content || '',
-    tags: [],
+    tags: blog.tags || [],
     relatedProduct: null,
   }
 }
