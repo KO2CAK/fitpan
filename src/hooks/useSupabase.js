@@ -261,7 +261,7 @@ export function useBlogs() {
       try {
         const { data, error } = await supabase
           .from('blogs')
-          .select('id, title, slug, content, image_url, author, published_at')
+          .select('id, title, slug, content, image_url, author, published_at, tags')
           .eq('status', 'published')
           .order('published_at', { ascending: false })
 
