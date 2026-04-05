@@ -1,6 +1,8 @@
 import { useState } from 'react'
 import { motion } from 'framer-motion'
-import { Link } from 'react-router-dom'
+import SectionLabel from '../components/atoms/SectionLabel'
+import Spinner from '../components/atoms/Spinner'
+import InspirationCard from '../components/molecules/InspirationCard'
 import { useBlogs, useTrackPageView } from '../hooks/useSupabase'
 
 export default function InspirationPage() {
@@ -19,13 +21,9 @@ export default function InspirationPage() {
       {/* Header */}
       <div className="bg-primary-800 text-white py-20">
         <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <motion.p
-            initial={{ opacity: 0, y: 10 }}
-            animate={{ opacity: 1, y: 0 }}
-            className="text-accent-300 text-xs font-heading font-bold tracking-widest uppercase mb-3"
-          >
-            Blog & Testimoni
-          </motion.p>
+          <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }}>
+            <SectionLabel className="text-accent-300 mb-3">Blog &amp; Testimoni</SectionLabel>
+          </motion.div>
           <motion.h1
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
@@ -71,53 +69,12 @@ export default function InspirationPage() {
       <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-14">
         {loading ? (
           <div className="flex justify-center py-20">
-            <div className="w-10 h-10 border-2 border-primary-500 border-t-transparent rounded-full animate-spin" />
+            <Spinner />
           </div>
         ) : (
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
           {filtered.map((post, i) => (
-            <motion.div
-              key={post.id}
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ delay: (i % 3) * 0.1 }}
-              className="bg-white rounded-3xl overflow-hidden shadow-sm hover:shadow-lg transition-shadow duration-300 group flex flex-col"
-            >
-              {/* Thumbnail */}
-              <div className={`h-48 ${post.avatarBg || 'bg-primary-50'} flex items-center justify-center flex-shrink-0 overflow-hidden`}>
-                {post.avatarImg
-                  ? <img src={post.avatarImg} alt={post.title} className="w-full h-full object-cover" />
-                  : <span className="text-7xl">{post.avatar}</span>
-                }
-              </div>
-
-              {/* Content */}
-              <div className="p-6 flex flex-col flex-1">
-                <p className="text-xs text-accent-600 font-bold uppercase tracking-wide mb-1">{post.category}</p>
-                <p className="text-xs text-gray-400 font-semibold mb-2">Problem: {post.problem}</p>
-                <h3 className="font-heading font-bold text-primary-800 mb-3 leading-snug line-clamp-3 flex-1">
-                  {post.title}
-                </h3>
-                <p className="text-body-sm text-gray-500 line-clamp-2 mb-4">{post.preview}</p>
-
-                {/* Tags */}
-                <div className="flex flex-wrap gap-1.5 mb-4">
-                  {post.tags.slice(0, 3).map((tag) => (
-                    <span key={tag} className="bg-primary-50 text-primary-600 text-xs font-semibold px-2 py-0.5 rounded-full">
-                      {tag}
-                    </span>
-                  ))}
-                </div>
-
-                <Link
-                  to={`/inspiration/${post.id}`}
-                  className="mt-auto text-primary-600 text-body-sm font-semibold hover:underline inline-flex items-center gap-1 group-hover:gap-2 transition-all"
-                >
-                  Baca Selengkapnya <span>→</span>
-                </Link>
-              </div>
-            </motion.div>
+            <InspirationCard key={post.id} post={post} index={i} />
           ))}
         </div>
         )}

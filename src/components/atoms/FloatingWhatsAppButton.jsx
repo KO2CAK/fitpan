@@ -2,7 +2,7 @@ import { Mail, MessageCircle } from 'lucide-react'
 
 // Floating WhatsApp Button Component - Atom
 export default function FloatingWhatsAppButton() {
-  const whatsappPhone = import.meta.env.VITE_WHATSAPP_PHONE || '62813xxxxxxxx'
+  const whatsappPhone = import.meta.env.VITE_WHATSAPP_PHONE || '628983487706'
   const whatsappUrl = `https://wa.me/${whatsappPhone.replace(/\D/g, '')}?text=Halo%20Fitpan!%20Saya%20ingin%20pesan%20produk%20Anda.`
 
   return (

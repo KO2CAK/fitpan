@@ -104,8 +104,8 @@ export function useWebProductCategories() {
 
     const fetchProducts = async () => {
       try {
-        // Fetch products and categories separately (more reliable than FK join)
-        const [{ data: products, error: prodError }, { data: categoryRows }] = await Promise.all([
+        // Fetch products, categories, and variants in parallel
+        const [{ data: products, error: prodError }, { data: categoryRows }, { data: variantRows }] = await Promise.all([
           supabase
             .from('products')
             .select('id, name, price, slug, image_url, web_description, category_id, stock')
@@ -114,6 +114,11 @@ export function useWebProductCategories() {
           supabase
             .from('categories')
             .select('id, name'),
+          supabase
+            .from('product_variants')
+            .select('id, product_id, weight_label, price, stock, sku_variant')
+            .eq('is_active', true)
+            .order('price', { ascending: true }),
         ])
 
         if (prodError) throw prodError
@@ -126,6 +131,13 @@ export function useWebProductCategories() {
         const catById = {}
         for (const c of (categoryRows || [])) {
           catById[c.id] = c.name
+        }
+
+        // Build a product id → variants lookup
+        const variantsByProduct = {}
+        for (const v of (variantRows || [])) {
+          if (!variantsByProduct[v.product_id]) variantsByProduct[v.product_id] = []
+          variantsByProduct[v.product_id].push(v)
         }
 
         // Group products by category name
@@ -148,15 +160,20 @@ export function useWebProductCategories() {
             const staticVariant = staticCat?.variants.find(
               (sv) => sv.name.toLowerCase() === p.name.toLowerCase() || sv.id === (p.slug || '')
             )
+            const weightVariants = variantsByProduct[p.id] || []
             return {
               id: p.slug || p.name.toLowerCase().replace(/\s+/g, '-').replace(/[^a-z0-9-]/g, ''),
               dbId: p.id,
               name: p.name,
               emoji: staticVariant?.emoji || staticCat?.emoji || '',
-              price: p.price,
+              // If weight variants exist, base price comes from the cheapest active variant
+              price: weightVariants.length > 0 ? weightVariants[0].price : p.price,
               desc: p.web_description || undefined,
               image_url: p.image_url || undefined,
-              stock: p.stock ?? 0,
+              stock: weightVariants.length > 0
+                ? weightVariants.reduce((sum, v) => sum + (v.stock || 0), 0)
+                : (p.stock ?? 0),
+              weightVariants, // array of { id, weight_label, price, stock, sku_variant }
             }
           })
 

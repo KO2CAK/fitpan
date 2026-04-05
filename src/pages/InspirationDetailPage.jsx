@@ -1,7 +1,7 @@
 import { motion } from 'framer-motion'
 import { useParams, Link, Navigate } from 'react-router-dom'
 import ReactMarkdown from 'react-markdown'
-import Button from '../components/atoms/Button'
+import Spinner from '../components/atoms/Spinner'
 import { useBlogPost, useBlogs } from '../hooks/useSupabase'
 
 export default function InspirationDetailPage() {
@@ -12,14 +12,13 @@ export default function InspirationDetailPage() {
   if (loading) {
     return (
       <div className="flex items-center justify-center min-h-screen bg-background-light">
-        <div className="w-10 h-10 border-2 border-primary-500 border-t-transparent rounded-full animate-spin" />
+        <Spinner size="lg" />
       </div>
     )
   }
 
   if (!post) return <Navigate to="/inspiration" replace />
 
-  const relatedProduct = null
   const otherPosts = allPosts.filter((p) => p.id !== id).slice(0, 3)
 
   return (
@@ -79,31 +78,6 @@ export default function InspirationDetailPage() {
         >
           <ReactMarkdown>{post.content}</ReactMarkdown>
         </motion.article>
-
-        {/* Related Product */}
-        {relatedProduct && (
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            className={`mt-14 bg-gradient-to-br ${relatedProduct.bgClass} rounded-3xl p-8 flex flex-col sm:flex-row items-center gap-6`}
-          >
-            <div className="text-6xl flex-shrink-0">{relatedProduct.emoji}</div>
-            <div className="flex-1 space-y-2">
-              <p className="text-xs font-bold uppercase tracking-widest text-gray-500">Produk yang digunakan</p>
-              <h3 className="font-heading font-bold text-xl text-primary-800">{relatedProduct.name}</h3>
-              <p className="text-body-sm text-gray-600">{relatedProduct.shortDesc}</p>
-            </div>
-            <div className="flex flex-col gap-2 flex-shrink-0">
-              <Link to={`/products/${relatedProduct.id}`}>
-                <Button variant="primary" size="sm">Lihat Produk</Button>
-              </Link>
-              <Link to="/distributor">
-                <Button variant="outline" size="sm">Beli Sekarang</Button>
-              </Link>
-            </div>
-          </motion.div>
-        )}
       </div>
 
       {/* More Stories */}

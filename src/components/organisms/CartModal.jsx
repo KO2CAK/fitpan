@@ -8,7 +8,7 @@ export default function CartModal() {
   const [name, setName] = useState('')
   const [nameError, setNameError] = useState(false)
 
-  const whatsappPhone = import.meta.env.VITE_WHATSAPP_PHONE || '62813xxxxxxxx'
+  const whatsappPhone = import.meta.env.VITE_WHATSAPP_PHONE || '628983487706'
 
   const total = cartItems.reduce((sum, item) => sum + (item.price || 0) * item.qty, 0)
 

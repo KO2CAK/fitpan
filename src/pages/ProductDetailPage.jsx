@@ -2,6 +2,8 @@ import { useState, useEffect } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { useParams, Link, Navigate } from 'react-router-dom'
 import Button from '../components/atoms/Button'
+import Spinner from '../components/atoms/Spinner'
+import ProductVariantCard from '../components/molecules/ProductVariantCard'
 import { useCart } from '../context/CartContext'
 import { useWebProductCategories } from '../hooks/useSupabase'
 
@@ -13,11 +15,10 @@ export default function ProductDetailPage() {
   const [slideIndex, setSlideIndex] = useState(0)
 
   const cat = productCategories.find((c) => c.id === id)
+  const images = cat
+    ? cat.variants.filter((v) => v.image_url).map((v) => ({ url: v.image_url, name: v.name }))
+    : []
 
-  // Derive images before any early return (hooks must run unconditionally)
-  const images = cat ? cat.variants.filter((v) => v.image_url).map((v) => ({ url: v.image_url, name: v.name })) : []
-
-  // Auto-advance carousel every 2.5 s
   useEffect(() => {
     if (images.length <= 1) return
     const timer = setInterval(() => setSlideIndex((i) => (i + 1) % images.length), 2500)
@@ -25,18 +26,39 @@ export default function ProductDetailPage() {
   }, [images.length])
 
   if (!loading && !cat) return <Navigate to="/products" replace />
-  if (!cat) return (
-    <div className="flex items-center justify-center min-h-screen">
-      <div className="w-8 h-8 border-2 border-primary-500 border-t-transparent rounded-full animate-spin" />
-    </div>
-  )
+  if (!cat) {
+    return (
+      <div className="flex items-center justify-center min-h-screen">
+        <Spinner />
+      </div>
+    )
+  }
 
   const filtered = search
     ? cat.variants.filter((v) => v.name.toLowerCase().includes(search.toLowerCase()))
     : cat.variants
 
-  // Other categories for cross-linking
   const others = productCategories.filter((c) => c.id !== id)
+
+  const handleAddToCart = (v, selectedWeightVariant) => {
+    // If a weight variant is selected, use its id/price/stock for the cart item
+    const cartId = selectedWeightVariant
+      ? `${cat.id}-${v.id}-${selectedWeightVariant.id}`
+      : `${cat.id}-${v.id}`
+    addToCart({
+      id: cartId,
+      dbId: v.dbId,
+      variantId: selectedWeightVariant?.id || null,
+      variantLabel: selectedWeightVariant?.weight_label || null,
+      name: selectedWeightVariant
+        ? `${v.name} (${selectedWeightVariant.weight_label})`
+        : v.name,
+      emoji: v.emoji,
+      image_url: v.image_url || null,
+      price: selectedWeightVariant ? selectedWeightVariant.price : v.price,
+      categoryName: cat.name,
+    })
+  }
 
   return (
     <div className="min-h-screen bg-background-light">
@@ -67,16 +89,14 @@ export default function ProductDetailPage() {
                 {cat.name}
               </h1>
               <p className="text-body-md text-gray-700 leading-relaxed">{cat.description}</p>
-              <div className="flex flex-wrap gap-3">
-                <a href="#variants-grid">
-                  <button
-                    className="flex items-center gap-2 px-4 py-2.5 rounded-xl font-heading font-semibold text-sm text-white transition-all hover:opacity-90"
-                    style={{ backgroundColor: cat.accentColor }}
-                  >
-                    Pilih Produk →
-                  </button>
-                </a>
-              </div>
+              <a href="#variants-grid">
+                <button
+                  className="flex items-center gap-2 px-4 py-2.5 rounded-xl font-heading font-semibold text-sm text-white transition-all hover:opacity-90"
+                  style={{ backgroundColor: cat.accentColor }}
+                >
+                  Pilih Produk →
+                </button>
+              </a>
             </motion.div>
 
             <motion.div
@@ -155,63 +175,13 @@ export default function ProductDetailPage() {
         ) : (
           <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4">
             {filtered.map((v, i) => (
-              <motion.div
+              <ProductVariantCard
                 key={v.id}
-                initial={{ opacity: 0, y: 16 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ delay: (i % 5) * 0.06 }}
-                className={`bg-gradient-to-br ${cat.bgClass} border ${cat.borderColor} rounded-2xl overflow-hidden flex flex-col items-center text-center gap-3 hover:shadow-md transition-shadow`}
-              >
-                {v.image_url
-                  ? <img src={v.image_url} alt={v.name} className="w-full h-36 object-cover" />
-                  : <span className="text-4xl pt-5">{v.emoji}</span>
-                }
-                <div className="px-4 pb-4 flex flex-col items-center gap-3 w-full">
-                <p className="font-heading font-bold text-sm text-primary-800 leading-tight">{v.name}</p>
-                {v.desc && (
-                  <p className="text-xs text-gray-500 leading-snug">{v.desc}</p>
-                )}
-                {v.price ? (
-                  <>
-                    <p className={`text-sm font-bold ${cat.textColor} mt-auto`}>
-                      Rp {v.price.toLocaleString('id-ID')}
-                    </p>
-                    <p className={`text-xs font-semibold ${
-                      v.stock === 0 ? 'text-red-500' : v.stock <= 5 ? 'text-orange-500' : 'text-gray-400'
-                    }`}>
-                      {v.stock === 0 ? 'Stok Habis' : `Stok: ${v.stock}`}
-                    </p>
-                    <button
-                      disabled={v.stock === 0}
-                      onClick={() =>
-                        v.stock > 0 && addToCart({
-                          id: `${cat.id}-${v.id}`,
-                          dbId: v.dbId,
-                          name: v.name,
-                          emoji: v.emoji,
-                          image_url: v.image_url || null,
-                          price: v.price,
-                          categoryName: cat.name,
-                        })
-                      }
-                      className={`w-full text-xs font-heading font-semibold py-2 px-3 rounded-xl text-white transition-all ${
-                        v.stock === 0
-                          ? 'opacity-40 cursor-not-allowed'
-                          : 'hover:opacity-90 active:scale-95'
-                      }`}
-                      style={{ backgroundColor: cat.accentColor }}
-                    >
-                      {v.stock === 0 ? 'Habis' : '+ Keranjang'}
-                    </button>
-                  </>
-                ) : (
-                  <Link to="/distributor" className={`text-xs font-semibold ${cat.textColor} hover:underline mt-auto`}>
-                    Hubungi Kami
-                  </Link>
-                )}
-                </div>
-              </motion.div>
+                variant={v}
+                category={cat}
+                index={i}
+                onAddToCart={handleAddToCart}
+              />
             ))}
           </div>
         )}
