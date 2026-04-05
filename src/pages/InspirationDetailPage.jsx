@@ -1,6 +1,5 @@
 import { motion } from 'framer-motion'
 import { useParams, Link, Navigate } from 'react-router-dom'
-import ReactMarkdown from 'react-markdown'
 import Spinner from '../components/atoms/Spinner'
 import { useBlogPost, useBlogs } from '../hooks/useSupabase'
 
@@ -76,7 +75,7 @@ export default function InspirationDetailPage() {
           transition={{ duration: 0.6, delay: 0.2 }}
           className="prose prose-lg max-w-none text-gray-700"
         >
-          <ReactMarkdown>{post.content}</ReactMarkdown>
+          <div dangerouslySetInnerHTML={{ __html: post.content }} />
         </motion.article>
       </div>
 

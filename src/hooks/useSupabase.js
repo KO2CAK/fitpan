@@ -223,13 +223,11 @@ export function useFetchProducts() {
 
 // ─── Blogs (from unified `blogs` table) ───────────────────────────────────────
 function mapBlogToPost(blog) {
-  // Derive a short preview from the first non-empty paragraph
-  const firstParagraph = blog.content
-    ? blog.content.split('\n').find((l) => l.trim().length > 40)?.trim() || blog.content.substring(0, 150)
+  // Strip HTML tags to get plain text, then extract a preview excerpt
+  const plainText = blog.content
+    ? blog.content.replace(/<[^>]+>/g, ' ').replace(/\s+/g, ' ').trim()
     : ''
-  const preview = firstParagraph.length > 150
-    ? firstParagraph.substring(0, 150) + '...'
-    : firstParagraph
+  const preview = plainText.length > 150 ? plainText.substring(0, 150) + '...' : plainText
 
   return {
     id: blog.slug || blog.id,
