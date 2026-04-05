@@ -70,14 +70,13 @@ export default function ProductsPage() {
         <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid grid-cols-2 md:grid-cols-4 gap-8 text-center">
             {[
-              { icon: '??', title: 'Tanpa MSG',       desc: 'Bebas MSG & bahan kimia berbahaya' },
-              { icon: '??', title: 'Tanpa Pengawet',  desc: 'Alami 100%, tanpa bahan pengawet' },
-              { icon: '?', title: 'Vacuum Frying',   desc: 'Proses vakum, high quality of packaging' },
-              { icon: '?', title: 'Tanpa Minyak',    desc: 'Proses tanpa minyak tambahan' },
+              { title: 'Tanpa MSG',       desc: 'Bebas MSG & bahan kimia berbahaya' },
+              { title: 'Tanpa Pengawet',  desc: 'Alami 100%, tanpa bahan pengawet' },
+              { title: 'Vacuum Frying',   desc: 'Proses vakum, high quality of packaging' },
+              { title: 'Tanpa Minyak',    desc: 'Proses tanpa minyak tambahan' },
             ].map((f) => (
               <div key={f.title} className="space-y-2">
-                <div className="text-3xl">{f.icon}</div>
-                <p className="font-heading font-bold">{f.title}</p>
+                <p className="font-heading font-bold text-primary-100">{f.title}</p>
                 <p className="text-primary-300 text-body-xs">{f.desc}</p>
               </div>
             ))}
