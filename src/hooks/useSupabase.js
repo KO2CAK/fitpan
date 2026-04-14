@@ -116,7 +116,7 @@ export function useWebProductCategories() {
             .select('id, name'),
           supabase
             .from('product_variants')
-            .select('id, product_id, weight_label, price, stock, sku_variant')
+            .select('id, product_id, weight_label, price, stock')
             .eq('is_active', true)
             .order('price', { ascending: true }),
         ])
@@ -173,7 +173,7 @@ export function useWebProductCategories() {
               stock: weightVariants.length > 0
                 ? weightVariants.reduce((sum, v) => sum + (v.stock || 0), 0)
                 : (p.stock ?? 0),
-              weightVariants, // array of { id, weight_label, price, stock, sku_variant }
+              weightVariants, // array of { id, weight_label, price, stock }
             }
           })
 

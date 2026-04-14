@@ -81,11 +81,15 @@ export default function ProductVariantCard({ variant: v, category: cat, index, o
                 : `Rp ${displayPrice.toLocaleString('id-ID')}`}
             </p>
             <p className={`text-xs font-semibold ${
-              displayStock === 0 ? 'text-red-500' : displayStock <= 5 ? 'text-orange-500' : 'text-gray-400'
+              displayStock === 0 ? 'text-red-500' : displayStock <= 5 ? 'text-orange-500' : 'text-green-600'
             }`}>
               {hasWeightVariants && !selectedVariant
                 ? null
-                : displayStock === 0 ? 'Stok Habis' : `Stok: ${displayStock}`}
+                : displayStock === 0
+                  ? 'Stok Habis'
+                  : displayStock <= 5
+                    ? 'Hampir Habis'
+                    : 'Tersedia ✓'}
             </p>
             <button
               disabled={!canAddToCart}
