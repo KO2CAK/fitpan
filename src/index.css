@@ -170,6 +170,61 @@
 }
 
 /* ========================================
+   BLOG CONTENT — prose styles for Tiptap HTML
+======================================== */
+
+/* YouTube responsive wrapper (Tiptap generates <div data-youtube-video>) */
+.blog-content div[data-youtube-video] {
+  position: relative;
+  width: 100%;
+  max-width: 720px;
+  margin: 1.75rem auto;
+  border-radius: 0.75rem;
+  overflow: hidden;
+  background: #000;
+  aspect-ratio: 16 / 9;
+  box-shadow: 0 4px 24px rgba(0, 0, 0, 0.18);
+}
+
+.blog-content div[data-youtube-video] iframe {
+  position: absolute;
+  inset: 0;
+  width: 100% !important;
+  height: 100% !important;
+  border: none;
+}
+
+/* Table styles */
+.blog-content table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 1.25rem 0;
+  font-size: 0.9rem;
+  border-radius: 0.5rem;
+  overflow: hidden;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.06);
+}
+
+.blog-content th {
+  background: #f0fdf4;
+  color: #166534;
+  font-weight: 700;
+  text-align: left;
+  padding: 0.6rem 1rem;
+  border: 1px solid #d1fae5;
+}
+
+.blog-content td {
+  padding: 0.6rem 1rem;
+  border: 1px solid #e5e7eb;
+  color: #374151;
+}
+
+.blog-content tr:nth-child(even) td {
+  background: #f9fafb;
+}
+
+/* ========================================
    RESPONSIVE TYPOGRAPHY
 ======================================== */
 

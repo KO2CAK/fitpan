@@ -3,8 +3,13 @@ import photoOfProduct from '../../assets/PhotoOfProduct-2.jpeg'
 
 export default function GutHealthSection() {
   return (
-    <section className="py-20 bg-primary-800 text-white overflow-hidden">
-      <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+    <section className="py-20 bg-gradient-to-br from-primary-800 via-primary-700 to-primary-900 text-white overflow-hidden relative">
+      {/* Subtle overlay gradients for depth */}
+      <div className="absolute top-0 left-0 w-full h-full bg-gradient-to-t from-black/20 to-transparent pointer-events-none"></div>
+      <div className="absolute -top-24 -left-24 w-96 h-96 bg-primary-600 rounded-full mix-blend-multiply filter blur-3xl opacity-30 pointer-events-none"></div>
+      <div className="absolute -bottom-24 -right-24 w-96 h-96 bg-primary-900 rounded-full mix-blend-multiply filter blur-3xl opacity-50 pointer-events-none"></div>
+
+      <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
         <motion.div
           className="grid grid-cols-1 md:grid-cols-2 gap-16 items-center"
           initial={{ opacity: 0, y: 40 }}

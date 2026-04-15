@@ -3,6 +3,12 @@
   publish   = "dist"
   functions = "netlify/functions"
 
+# RSS feed — must come BEFORE the SPA wildcard
+[[redirects]]
+  from   = "/rss"
+  to     = "/.netlify/functions/rss"
+  status = 200
+
 # SPA fallback — send all routes to index.html so React Router works on refresh
 [[redirects]]
   from   = "/*"

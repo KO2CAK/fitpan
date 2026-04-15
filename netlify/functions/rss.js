@@ -26,9 +26,22 @@ function escapeXml(str = "") {
     .replace(/'/g, "&apos;");
 }
 
-/** Strip HTML tags and collapse whitespace to produce a plain-text excerpt. */
+/**
+ * Convert YouTube iframes to a plain-text fallback link so RSS readers
+ * don't encounter broken embeds, then strip all remaining HTML tags.
+ */
 function toPlainExcerpt(html = "", maxLen = 200) {
-  const plain = html.replace(/<[^>]+>/g, " ").replace(/\s+/g, " ").trim();
+  // Replace <iframe src="...youtube..."> blocks with a readable link
+  const withYoutubeLinks = html.replace(
+    /<iframe[^>]+src=["']([^"']*(?:youtube\.com|youtu\.be)[^"']*)["'][^>]*>[\s\S]*?<\/iframe>/gi,
+    (_, src) => ` [Video YouTube: ${src}] `
+  );
+  // Also handle Tiptap's youtube wrapper div
+  const withWrapper = withYoutubeLinks.replace(
+    /<div[^>]+data-youtube-video[^>]*>([\s\S]*?)<\/div>/gi,
+    (_, inner) => inner
+  );
+  const plain = withWrapper.replace(/<[^>]+>/g, " ").replace(/\s+/g, " ").trim();
   return plain.length > maxLen ? plain.slice(0, maxLen) + "…" : plain;
 }
 

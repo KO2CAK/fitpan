@@ -12,7 +12,7 @@ const productSubLinks = [
   { to: '/products/mix',   label: 'Fitpan Mix',   emoji: '🥗' },
 ]
 
-function ProductsDropdown() {
+function ProductsDropdown({ textColor }) {
   const [open, setOpen] = useState(false)
   const ref = useRef(null)
 
@@ -28,7 +28,7 @@ function ProductsDropdown() {
     <div ref={ref} className="relative">
       <button
         onClick={() => setOpen((v) => !v)}
-        className="flex items-center gap-1 text-body-md font-medium text-gray-600 hover:text-primary-600 transition-colors"
+        className={`flex items-center gap-1 text-body-md transition-colors ${textColor}`}
       >
         Products
         <ChevronDown size={15} className={`transition-transform duration-200 ${open ? 'rotate-180' : ''}`} />
@@ -74,8 +74,22 @@ function ProductsDropdown() {
 export default function Navbar() {
   const [mobileOpen, setMobileOpen] = useState(false)
   const [mobileProductsOpen, setMobileProductsOpen] = useState(false)
+  const [isScrolled, setIsScrolled] = useState(false)
   const { totalItems, setIsCartOpen } = useCart()
   const { increment } = useBeliCounter()
+
+  // Track scrolling to toggle navbar background
+  useEffect(() => {
+    const handleScroll = () => {
+      if (window.scrollY > 20) {
+        setIsScrolled(true)
+      } else {
+        setIsScrolled(false)
+      }
+    }
+    window.addEventListener('scroll', handleScroll)
+    return () => window.removeEventListener('scroll', handleScroll)
+  }, [])
 
   const navLinks = [
     { to: '/', label: 'Home' },
@@ -83,40 +97,47 @@ export default function Navbar() {
     { to: '/inspiration', label: 'Inspiration' },
   ]
 
+  // Dynamic class for navbar text depending on scroll
+  const navTextColor = isScrolled ? 'text-gray-700 hover:text-primary-600' : 'text-gray-800 lg:text-white hover:text-accent-300'
+  const navActiveColor = isScrolled ? 'text-primary-600 font-bold' : 'text-accent-300 lg:text-white font-bold drop-shadow-md'
+
   return (
-    <nav className="sticky top-0 z-50 bg-white/95 backdrop-blur-md border-b border-gray-100 shadow-sm">
-      <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-3 flex items-center justify-between">
+    <nav className={`fixed w-full top-0 z-50 transition-all duration-300 ${isScrolled ? 'bg-white/95 backdrop-blur-md border-b border-gray-100 shadow-sm py-2' : 'bg-transparent py-4'}`}>
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex items-center justify-between">
         {/* Logo */}
         <Link to="/" className="flex items-center gap-2">
-          <img src={logo} alt="Fitpan" className="h-10 w-auto object-contain" />
-          <span className="font-heading font-bold text-lg tracking-tight leading-none">
-            <span className="text-green-600">FIT</span><span className="text-orange-500">PAN</span>
+          <div className={`p-1.5 rounded-xl transition-all duration-300 ${!isScrolled ? 'bg-white/80 backdrop-blur-sm' : ''}`}>
+             <img src={logo} alt="Fitpan" className="h-9 w-auto object-contain" />
+          </div>
+          <span className={`font-heading font-bold text-xl tracking-tight leading-none ${!isScrolled ? 'hidden md:block text-white drop-shadow-md' : 'block'}`}>
+            <span className={!isScrolled ? 'text-white' : 'text-green-600'}>FIT</span>
+            <span className={!isScrolled ? 'text-accent-300' : 'text-orange-500'}>PAN</span>
           </span>
         </Link>
 
         {/* Nav Links Desktop */}
-        <div className="hidden md:flex items-center gap-8">
+        <div className={`hidden md:flex items-center gap-8 ${!isScrolled ? 'bg-black/10 backdrop-blur-sm px-6 py-2 rounded-full border border-white/20' : ''}`}>
           <NavLink
             to="/"
             end
             className={({ isActive }) =>
-              `text-body-md font-medium transition-colors ${
-                isActive ? 'text-primary-600 font-semibold' : 'text-gray-600 hover:text-primary-600'
+              `text-body-md transition-colors ${
+                isActive ? navActiveColor : navTextColor
               }`
             }
           >
             Home
           </NavLink>
 
-          <ProductsDropdown />
+          <ProductsDropdown textColor={navTextColor} />
 
           {navLinks.filter((l) => l.to !== '/').map((link) => (
             <NavLink
               key={link.to}
               to={link.to}
               className={({ isActive }) =>
-                `text-body-md font-medium transition-colors ${
-                  isActive ? 'text-primary-600 font-semibold' : 'text-gray-600 hover:text-primary-600'
+                `text-body-md transition-colors ${
+                  isActive ? navActiveColor : navTextColor
                 }`
               }
             >
@@ -130,10 +151,10 @@ export default function Navbar() {
           {/* Cart icon */}
           <button
             onClick={() => setIsCartOpen(true)}
-            className="relative p-2 rounded-lg hover:bg-gray-100 transition-colors"
+            className={`relative p-2 rounded-full transition-colors ${!isScrolled ? 'bg-white/20 hover:bg-white/30 text-white backdrop-blur-sm' : 'hover:bg-gray-100 text-gray-600'}`}
             title="Keranjang Belanja"
           >
-            <ShoppingCart size={20} className="text-gray-600" />
+            <ShoppingCart size={20} className={!isScrolled ? "text-white" : "text-gray-600"} />
             {totalItems > 0 && (
               <span className="absolute -top-1 -right-1 w-5 h-5 bg-accent-500 text-white text-[10px] font-bold rounded-full flex items-center justify-center">
                 {totalItems > 9 ? '9+' : totalItems}
@@ -141,13 +162,15 @@ export default function Navbar() {
             )}
           </button>
           <Link to="/products" onClick={increment}>
-            <Button variant="primary" size="sm">Beli Sekarang</Button>
+            <Button variant="primary" size="sm" className={!isScrolled ? "bg-[rgb(0, 0, 0)] hover:bg-[#72827a] backdrop-blur-sm px-6 border-none shadow-lg text-white" : ""}>
+               Shop Now
+            </Button>
           </Link>
           <button
-            className="md:hidden p-2 rounded-lg hover:bg-gray-100 transition-colors"
+            className={`md:hidden p-2 rounded-lg transition-colors ${!isScrolled ? 'text-gray-800' : 'hover:bg-gray-100 text-primary-600'}`}
             onClick={() => setMobileOpen(!mobileOpen)}
           >
-            {mobileOpen ? <X size={22} className="text-primary-600" /> : <Menu size={22} className="text-primary-600" />}
+            {mobileOpen ? <X size={22} className={!isScrolled ? 'text-white' : 'text-primary-600'} /> : <Menu size={22} className={!isScrolled ? 'text-white' : 'text-primary-600'} />}
           </button>
         </div>
       </div>

@@ -23,80 +23,95 @@ export default function HeroSection() {
   }
 
   return (
-    <section className="relative min-h-[90vh] flex items-center bg-background-light overflow-hidden">
-      {/* Decorative blobs */}
-      <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-primary-100 rounded-full -translate-y-1/3 translate-x-1/3 opacity-50 blur-3xl pointer-events-none" />
-      <div className="absolute bottom-0 left-0 w-[400px] h-[400px] bg-accent-100 rounded-full translate-y-1/3 -translate-x-1/3 opacity-40 blur-3xl pointer-events-none" />
+    <section className="relative min-h-[100vh] flex items-center overflow-hidden">
+      {/* Background Image: High-res Lifestyle Photo */}
+      <div className="absolute inset-0 z-0">
+        <img 
+          src="https://images.unsplash.com/photo-1490645935967-10de6ba17061?q=80&w=2000&auto=format&fit=crop" 
+          alt="Healthy lifestyle background" 
+          className="w-full h-full object-cover"
+        />
+        {/* Subtle overlay to ensure text readability */}
+        <div className="absolute inset-0 bg-black/30 md:bg-black/20 bg-gradient-to-r from-black/60 to-transparent"></div>
+      </div>
 
       <motion.div
-        className="relative max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 w-full grid grid-cols-1 md:grid-cols-2 gap-12 items-center py-24"
+        className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full grid grid-cols-1 md:grid-cols-2 gap-12 items-center pt-32 pb-24"
         variants={containerVariants}
         initial="hidden"
         animate="visible"
       >
-        {/* Left */}
-        <div className="space-y-7">
+        {/* Left Content Area */}
+        <div className="space-y-7 z-10 max-w-xl">
           <motion.p
             variants={itemVariants}
-            className="text-xs font-heading font-bold tracking-[0.2em] text-primary-500 uppercase"
+            className="text-sm font-heading font-bold tracking-[0.2em] text-white/90 uppercase drop-shadow-md"
           >
             A BETTER YOU, A BETTER FUTURE
           </motion.p>
 
           <motion.h1
             variants={itemVariants}
-            className="text-[2.8rem] md:text-[3.5rem] leading-[1.1] font-heading font-bold text-primary-800"
+            className="text-[3rem] md:text-[4.5rem] leading-[1.1] font-heading font-bold text-white drop-shadow-xl flex flex-wrap items-center gap-2 md:gap-4"
           >
-            Fitpan{' '}
-            <span className="text-accent-500 italic">for</span>{' '}
-            <span className="underline decoration-accent-400 decoration-4 underline-offset-4">Anyone</span>
+            <span>Fitpan</span>
+            <span className="text-accent-300 italic drop-shadow-lg">for</span>
+            <motion.span 
+              className="inline-block underline decoration-accent-400 decoration-4 underline-offset-8 text-white relative"
+              animate={{ 
+                opacity: [0.6, 1, 0.6],
+                textShadow: [
+                  "0px 0px 0px rgba(255, 255, 255, 0)",
+                  "0px 0px 20px rgba(255, 255, 255, 0.8)",
+                  "0px 0px 0px rgba(255, 255, 255, 0)"
+                ]
+              }}
+              transition={{ 
+                duration: 3, 
+                repeat: Infinity, 
+                ease: "easeInOut" 
+              }}
+            >
+              Anyone
+            </motion.span>
           </motion.h1>
 
-          <motion.p variants={itemVariants} className="text-body-lg text-gray-600 max-w-md">
-            Tak pernah ada kata terlambat untuk hidup sehat. Mulailah dari snack yang lebih baik — Fitpan
-            membantu penuhi nutrisi harian, kontrol berat badan, dan jaga energi sepanjang hari.
+          <motion.p variants={itemVariants} className="text-lg md:text-xl text-white/95 max-w-lg drop-shadow-md font-medium leading-relaxed">
+            Tak pernah ada kata terlambat untuk hidup sehat. Mulailah dari cemilan yang lebih baik — Fitpan
+            membantu penuhi nutrisi harian, kontrol berat badan, dan jaga energimu.
           </motion.p>
 
-          <motion.div variants={itemVariants} className="flex flex-wrap gap-4">
-            <Button variant="primary" size="lg" onClick={handleBeliSekarang}>Beli Sekarang</Button>
-            <Button variant="outline" size="lg" onClick={() => { increment(); navigate('/products') }}>Lihat Semua Produk</Button>
+          <motion.div variants={itemVariants} className="flex flex-wrap gap-4 pt-4">
+            <Button 
+              variant="primary" 
+              size="lg" 
+              onClick={() => { increment(); navigate('/products') }} 
+              className="relative overflow-hidden bg-gradient-to-r from-orange-500 to-green-500 border-none !shadow-[0_4px_20px_rgba(249,115,22,0.4)] hover:!shadow-[0_8px_30px_rgba(34,197,94,0.5)] transform hover:-translate-y-1 transition-all duration-300"
+            >
+              <span className="text-white font-bold tracking-wider">Beli Fitpan</span>
+            </Button>
           </motion.div>
 
-          <motion.div variants={itemVariants} className="flex items-center gap-4 pt-2">
-            <div className="flex -space-x-2">
+          <motion.div variants={itemVariants} className="flex items-center gap-4 pt-6">
+            <div className="flex -space-x-3">
               {['🧑', '👩', '👨', '🧕'].map((e, i) => (
                 <div
                   key={i}
-                  className="w-9 h-9 rounded-full bg-primary-100 border-2 border-white flex items-center justify-center text-lg"
+                  className="w-10 h-10 md:w-12 md:h-12 rounded-full bg-white/20 backdrop-blur-md border-2 border-white/50 flex items-center justify-center text-lg md:text-xl shadow-lg"
                 >
                   {e}
                 </div>
               ))}
             </div>
-            <p className="text-body-sm text-gray-600">
-              <span className="font-bold text-primary-700">{count.toLocaleString('id-ID')}</span> orang sudah beli
+            <p className="text-sm md:text-base text-white font-medium bg-black/20 px-4 py-2 rounded-full shadow-lg backdrop-blur-md border border-white/10">
+              <span className="font-bold text-accent-300">{count.toLocaleString('id-ID')}</span> orang sudah beli
             </p>
           </motion.div>
         </div>
 
-        {/* Right – product visual */}
-        <motion.div variants={itemVariants} className="flex justify-center">
-          <div className="relative">
-            <div className="w-72 md:w-96 rounded-3xl overflow-hidden shadow-2xl border-4 border-white">
-              <img
-                src={photoOfProduct}
-                alt="Produk Fitpan"
-                className="w-full h-full object-cover"
-              />
-            </div>
-            {/* Floating badges */}
-            {/* <div className="absolute -top-4 -right-4 bg-white shadow-lg rounded-xl px-3 py-2 text-xs font-bold text-primary-600 border border-primary-100">
-              ✓ Halal Certified
-            </div> */}
-            <div className="absolute -bottom-4 -left-4 bg-white shadow-lg rounded-xl px-3 py-2 text-xs font-bold text-accent-600 border border-accent-100">
-              🌾 Tinggi Serat
-            </div>
-          </div>
+        {/* Right – empty or minimalistic to keep background as star */}
+        <motion.div variants={itemVariants} className="hidden md:flex justify-center relative z-10 h-full items-end pb-10">
+          {/* We've removed the extra product box here to let the gorgeous food background shine! */}
         </motion.div>
       </motion.div>
     </section>
